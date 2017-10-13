@@ -73,7 +73,6 @@ public class NpmPackageFolder {
     }
 
     public List<NpmPackageFolder> getChildNpmProjectsFromNodeModules() {
-
         final List<NpmPackageFolder> packages = new ArrayList<>();
         if (nodeModulesDirectory.exists()) {
             final File[] list = nodeModulesDirectory.listFiles();
@@ -90,6 +89,35 @@ public class NpmPackageFolder {
                                 if (folderInner.packageJsonExists()) {
                                     final NpmPackageFolder found = new NpmPackageFolder(realFile);
                                     found.scopedPackageName = file.getName();
+                                    packages.add(found);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return packages;
+    }
+
+    public List<NpmPackageFolder> getChildNpmProjectsFromNodeModules2() {
+        final List<NpmPackageFolder> packages = new ArrayList<>();
+        if (nodeModulesDirectory.isDirectory()) {
+            final File[] directoryContents = nodeModulesDirectory.listFiles();
+            for (final File nodeModule : directoryContents) {
+                final NpmPackageFolder npmPackageDir = new NpmPackageFolder(nodeModule);
+                if (npmPackageDir.packageJsonExists()) {
+                    packages.add(new NpmPackageFolder(nodeModule));
+                } else {
+                    if (nodeModule.getName().startsWith("@")) {
+                        final File[] nodeModulesDirContents = nodeModule.listFiles();
+                        for (final File module : nodeModulesDirContents) {
+                            for (final File moduleContent : module.listFiles()) {
+                                final NpmPackageFolder folderInner = new NpmPackageFolder(moduleContent);
+                                if (folderInner.packageJsonExists()) {
+                                    final NpmPackageFolder found = new NpmPackageFolder(moduleContent);
+                                    found.scopedPackageName = nodeModule.getName();
                                     packages.add(found);
                                 }
                             }
