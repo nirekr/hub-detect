@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool.packagist
 
+import java.nio.file.Path
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -51,8 +53,8 @@ class PackagistParser {
 
 
 
-    public DetectCodeLocation getDependencyGraphFromProject(String sourcePath, String composerJsonText, String composerLockText) {
-        MutableDependencyGraph graph = new MutableMapDependencyGraph();
+    public DetectCodeLocation getDependencyGraphFromProject(Path sourcePath, String composerJsonText, String composerLockText) {
+        MutableDependencyGraph graph = new MutableMapDependencyGraph()
 
         JsonObject composerJsonObject = new JsonParser().parse(composerJsonText) as JsonObject
         String projectName = composerJsonObject.get('name')?.getAsString()
@@ -70,11 +72,11 @@ class PackagistParser {
         }
         convertFromJsonToDependency(graph, null, startingPackages, packagistPackages, true)
 
-        ExternalId projectExternalId;
+        ExternalId projectExternalId
         if (projectName == null || projectVersion == null){
-            projectExternalId = externalIdFactory.createPathExternalId(Forge.PACKAGIST, sourcePath);
+            projectExternalId = externalIdFactory.createPathExternalId(Forge.PACKAGIST, sourcePath.toRealPath().toString())
         }else{
-            projectExternalId = externalIdFactory.createNameVersionExternalId(Forge.PACKAGIST, projectName, projectVersion);
+            projectExternalId = externalIdFactory.createNameVersionExternalId(Forge.PACKAGIST, projectName, projectVersion)
         }
 
         new DetectCodeLocation(BomToolType.PACKAGIST, sourcePath, projectName, projectVersion, projectExternalId, graph)

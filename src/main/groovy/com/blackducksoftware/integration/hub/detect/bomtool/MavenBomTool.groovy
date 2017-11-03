@@ -22,7 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
-import org.apache.commons.lang3.StringUtils
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,7 +53,7 @@ class MavenBomTool extends BomTool {
     @Autowired
     HubSignatureScanner hubSignatureScanner
 
-    private String mvnExecutable
+    private Path mvnExecutable
 
     BomToolType getBomToolType() {
         return BomToolType.MAVEN
@@ -100,12 +101,12 @@ class MavenBomTool extends BomTool {
         codeLocations
     }
 
-    private String findMavenExecutablePath() {
-        if (StringUtils.isNotBlank(detectConfiguration.getMavenPath())) {
+    private Path findMavenExecutablePath() {
+        if (detectConfiguration.getMavenPath() != null) {
             return detectConfiguration.getMavenPath()
         }
 
-        String wrapperPath = executableManager.getExecutablePath(ExecutableType.MVNW, false, sourcePath)
+        Path wrapperPath = executableManager.getExecutablePath(ExecutableType.MVNW, false, sourcePath)
         if (wrapperPath) {
             return wrapperPath
         }

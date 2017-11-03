@@ -22,8 +22,6 @@
  */
 package com.blackducksoftware.integration.hub.detect.hub
 
-import org.apache.commons.lang3.EnumUtils
-import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,8 +47,6 @@ import com.blackducksoftware.integration.hub.detect.DetectConfiguration
 import com.blackducksoftware.integration.hub.detect.model.DetectProject
 import com.blackducksoftware.integration.hub.exception.DoesNotExistException
 import com.blackducksoftware.integration.hub.global.HubServerConfig
-import com.blackducksoftware.integration.hub.model.enumeration.PolicySeverityEnum
-import com.blackducksoftware.integration.hub.model.enumeration.VersionBomPolicyStatusOverallStatusEnum
 import com.blackducksoftware.integration.hub.model.request.ProjectRequest
 import com.blackducksoftware.integration.hub.model.view.CodeLocationView
 import com.blackducksoftware.integration.hub.model.view.ProjectVersionView
@@ -129,14 +125,14 @@ class HubManager {
             if (detectConfiguration.getRiskReportPdf()) {
                 RiskReportDataService riskReportDataService = hubServiceWrapper.createRiskReportDataService()
                 logger.info("Creating risk report pdf")
-                File pdfFile = riskReportDataService.createReportPdfFile(new File(detectConfiguration.riskReportPdfOutputDirectory), detectProject.projectName, detectProject.projectVersionName)
+                File pdfFile = riskReportDataService.createReportPdfFile(detectConfiguration.riskReportPdfOutputDirectory.toFile(), detectProject.projectName, detectProject.projectVersionName)
                 logger.info("Created risk report pdf : ${pdfFile.getCanonicalPath()}")
             }
 
             if (detectConfiguration.getNoticesReport()) {
                 RiskReportDataService riskReportDataService = hubServiceWrapper.createRiskReportDataService()
                 logger.info("Creating notices report")
-                File noticesFile = riskReportDataService.createNoticesReportFile(new File(detectConfiguration.noticesReportOutputDirectory), detectProject.projectName, detectProject.projectVersionName)
+                File noticesFile = riskReportDataService.createNoticesReportFile(detectConfiguration.noticesReportOutputDirectory.toFile(), detectProject.projectName, detectProject.projectVersionName)
                 if (noticesFile != null) {
                     logger.info("Created notices report : ${noticesFile.getCanonicalPath()}")
                 }
@@ -207,7 +203,7 @@ class HubManager {
                     CodeLocationView codeLocationView = codeLocationRequestService.getCodeLocationByName(codeLocationName)
                     if (detectConfiguration.projectCodeLocationDeleteOldNames) {
                         try {
-                            codeLocationRequestService.deleteCodeLocation(codeLocationView);
+                            codeLocationRequestService.deleteCodeLocation(codeLocationView)
                             logger.info("Deleted code location '${codeLocationName}'")
                         } catch (IntegrationException e) {
                             logger.error("Not able to delete the code location '${codeLocationName}': ${e.message}")

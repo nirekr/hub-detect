@@ -24,6 +24,7 @@ package com.blackducksoftware.integration.hub.detect.util.executable;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
@@ -88,12 +89,12 @@ public class ExecutableRunner {
         }
     }
 
-    public void runExeToFile(final String exePath, final File outputFile, final File errorFile, final String... args) throws ExecutableRunnerException {
-        final Executable exe = new Executable(new File(detectConfiguration.getSourcePath()), exePath, Arrays.asList(args));
+    public void runExeToFile(final Path exePath, final File outputFile, final File errorFile, final String... args) throws ExecutableRunnerException {
+        final Executable exe = new Executable(detectConfiguration.getSourcePath().toFile(), exePath, Arrays.asList(args));
         executeToFile(exe, outputFile, errorFile);
     }
 
-    public ExecutableOutput runExe(final String exePath, final String... args) throws ExecutableRunnerException {
+    public ExecutableOutput runExe(final Path exePath, final String... args) throws ExecutableRunnerException {
         final Executable exe = new Executable(detectConfiguration.getSourceDirectory(), exePath, Arrays.asList(args));
         return execute(exe);
     }

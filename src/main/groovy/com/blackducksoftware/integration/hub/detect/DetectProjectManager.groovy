@@ -141,7 +141,7 @@ class DetectProjectManager {
         List<File> bdioFiles = []
         MutableDependencyGraph aggregateDependencyGraph = simpleBdioFactory.createMutableDependencyGraph()
 
-        Map<ExternalId, BdioNode> nodeMap = new HashMap<ExternalId, BdioNode>();
+        Map<ExternalId, BdioNode> nodeMap = new HashMap<ExternalId, BdioNode>()
         detectProject.detectCodeLocations.each {
             if (detectConfiguration.aggregateBomName) {
                 aggregateDependencyGraph.addGraphAsChildrenToRoot(it.dependencyGraph)
@@ -154,12 +154,12 @@ class DetectProjectManager {
                 String projectVersionName = detectProject.getProjectVersionName()
                 String prefix = detectConfiguration.getProjectCodeLocationPrefix()
                 String suffix = detectConfiguration.getProjectCodeLocationSuffix()
-                CodeLocationName codeLocationName = codeLocationNameService.createBomToolName(it.sourcePath, projectName, projectVersionName, it.bomToolType, prefix, suffix)
+                CodeLocationName codeLocationName = codeLocationNameService.createBomToolName(it.sourcePath.toRealPath().toString(), projectName, projectVersionName, it.bomToolType, prefix, suffix)
                 String codeLocationNameString = codeLocationNameService.generateBomToolCurrent(codeLocationName)
                 final SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(codeLocationNameString, detectProject, it)
-                String projectPath = detectFileManager.extractFinalPieceFromPath(it.sourcePath)
+                String projectPath = it.getSourcePath().getFileName().toString()
                 final String filename = createBdioFilename(it.bomToolType, projectPath, projectName, projectVersionName)
-                final File outputFile = new File(detectConfiguration.bdioOutputDirectoryPath, filename)
+                final File outputFile = detectConfiguration.bdioOutputDirectoryPath.resolve(filename).toFile()
                 if (outputFile.exists()) {
                     outputFile.delete()
                 }
@@ -217,8 +217,8 @@ class DetectProjectManager {
     }
 
     private SimpleBdioDocument createAggregateSimpleBdioDocument(DetectProject detectProject, DependencyGraph dependencyGraph) {
-        final String codeLocationName = '';
-        final String projectName = detectProject.getProjectName();
+        final String codeLocationName = ''
+        final String projectName = detectProject.getProjectName()
         final String projectVersionName = detectProject.projectVersionName
         final ExternalId projectExternalId = simpleBdioFactory.createNameVersionExternalId(new Forge('', '/'), projectName, projectVersionName)
 
@@ -251,7 +251,7 @@ class DetectProjectManager {
         if (detectConfiguration.getProjectName()) {
             projectName = detectConfiguration.getProjectName()
         } else if (!projectName && detectConfiguration.sourcePath) {
-            String finalSourcePathPiece = detectFileManager.extractFinalPieceFromPath(detectConfiguration.sourcePath)
+            String finalSourcePathPiece = detectConfiguration.sourcePath.getFileName()
             projectName = finalSourcePathPiece
         }
 

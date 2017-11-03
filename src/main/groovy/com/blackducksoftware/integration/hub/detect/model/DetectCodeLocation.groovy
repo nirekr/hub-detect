@@ -22,25 +22,27 @@
  */
 package com.blackducksoftware.integration.hub.detect.model
 
+import java.nio.file.Path
+
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId
 
 class DetectCodeLocation {
     private final BomToolType bomToolType
-    private final String sourcePath
+    private final Path sourcePath
     private final String bomToolProjectName
     private final String bomToolProjectVersionName
     private final ExternalId bomToolProjectExternalId
     private final DependencyGraph dependencyGraph
 
-    DetectCodeLocation(BomToolType bomToolType, String sourcePath, ExternalId bomToolProjectExternalId, DependencyGraph dependencyGraph) {
+    DetectCodeLocation(BomToolType bomToolType, Path sourcePath, ExternalId bomToolProjectExternalId, DependencyGraph dependencyGraph) {
         this.bomToolType = bomToolType
         this.sourcePath = sourcePath
         this.bomToolProjectExternalId = bomToolProjectExternalId
         this.dependencyGraph = dependencyGraph
     }
 
-    DetectCodeLocation(BomToolType bomToolType, String sourcePath, String bomToolProjectName, String bomToolProjectVersionName, ExternalId bomToolProjectExternalId, DependencyGraph dependencyGraph) {
+    DetectCodeLocation(BomToolType bomToolType, Path sourcePath, String bomToolProjectName, String bomToolProjectVersionName, ExternalId bomToolProjectExternalId, DependencyGraph dependencyGraph) {
         this.bomToolType = bomToolType
         this.sourcePath = sourcePath
         this.bomToolProjectName = bomToolProjectName
@@ -53,7 +55,7 @@ class DetectCodeLocation {
         bomToolType
     }
 
-    String getSourcePath() {
+    Path getSourcePath() {
         sourcePath
     }
 

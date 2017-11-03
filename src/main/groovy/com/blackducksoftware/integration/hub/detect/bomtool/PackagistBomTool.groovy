@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Black Duck Software, Inc.
+ å * Copyright (C) 2017 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
  *
  *
@@ -28,6 +28,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory
 import com.blackducksoftware.integration.hub.detect.bomtool.packagist.PackagistParser
 import com.blackducksoftware.integration.hub.detect.model.BomToolType
@@ -66,8 +67,8 @@ class PackagistBomTool extends BomTool {
     }
 
     List<DetectCodeLocation> extractDetectCodeLocations() {
-        String composerJsonText = new File(sourcePath, 'composer.json').getText(StandardCharsets.UTF_8.toString())
-        String composerLockText = new File(sourcePath, 'composer.lock').getText(StandardCharsets.UTF_8.toString())
+        String composerJsonText = new File(sourcePath.toFile(), 'composer.json').getText(StandardCharsets.UTF_8.toString())
+        String composerLockText = new File(sourcePath.toFile(), 'composer.lock').getText(StandardCharsets.UTF_8.toString())
 
         def detectCodeLocation = packagistParser.getDependencyGraphFromProject(sourcePath, composerJsonText, composerLockText)
 

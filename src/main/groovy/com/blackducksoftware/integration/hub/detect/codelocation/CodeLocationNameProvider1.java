@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.codelocation;
 
+import java.nio.file.Paths;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +34,7 @@ public class CodeLocationNameProvider1 extends CodeLocationNameProvider {
     public String generateBomToolName(final CodeLocationName codeLocationName) {
         final String projectName = codeLocationName.getProjectName();
         final String projectVersionName = codeLocationName.getProjectVersionName();
-        final String finalSourcePathPiece = detectFileManager.extractFinalPieceFromPath(codeLocationName.getSourcePath());
+        final String finalSourcePathPiece = Paths.get(codeLocationName.getSourcePath()).getFileName().toString();
         final String bomToolString = codeLocationName.getBomToolType() == null ? "" : codeLocationName.getBomToolType().toString();
         final String prefix = codeLocationName.getPrefix();
 

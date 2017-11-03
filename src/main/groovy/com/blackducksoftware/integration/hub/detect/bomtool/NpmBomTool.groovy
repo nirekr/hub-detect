@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -50,7 +52,7 @@ class NpmBomTool extends BomTool {
     public static final String OUTPUT_FILE = 'detect_npm_proj_dependencies.json'
     public static final String ERROR_FILE = 'detect_npm_error.json'
 
-    private String npmExePath
+    private Path npmExePath
 
     @Autowired
     NpmCliDependencyFinder npmCliDependencyFinder
@@ -98,7 +100,7 @@ class NpmBomTool extends BomTool {
             if (!npmExePath) {
                 logger.warn("Could not find an ${executableManager.getExecutableName(ExecutableType.NPM)} executable")
             } else {
-                npmLsExe = new Executable(new File(sourcePath), npmExePath, ['-version'])
+                npmLsExe = new Executable(sourcePath.toFile(), npmExePath, ['-version'])
                 String npmNodePath = detectConfiguration.getNpmNodePath()
                 if (!npmNodePath.isEmpty()) {
                     int lastSlashIndex = npmNodePath.lastIndexOf('/')

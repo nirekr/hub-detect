@@ -22,8 +22,9 @@
  */
 package com.blackducksoftware.integration.hub.detect.util
 
+import java.nio.file.Path
+
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.FilenameUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -115,29 +116,20 @@ class DetectFileManager {
         file
     }
 
-    public String extractFinalPieceFromPath(String path) {
-        if (path == null || path.length() == 0) {
-            return ''
-        }
-        String normalizedPath = FilenameUtils.normalizeNoEndSeparator(path, true)
-        normalizedPath[normalizedPath.lastIndexOf('/') + 1..-1]
-    }
-
-    boolean directoryExists(final String sourcePath, final String relativePath) {
-        final File sourceDirectory = new File(sourcePath)
-        final File relativeDirectory = new File(sourceDirectory, relativePath)
+    boolean directoryExists(final Path sourcePath, final String relativePath) {
+        final File relativeDirectory = sourcePath.resolve(relativePath).toFile()
         return relativeDirectory.isDirectory()
     }
 
-    public boolean containsAllFiles(String sourcePath, String... filenamePatterns) {
+    public boolean containsAllFiles(Path sourcePath, String... filenamePatterns) {
         return fileFinder.containsAllFiles(sourcePath, filenamePatterns)
     }
 
-    public boolean containsAllFilesToDepth(String sourcePath, int maxDepth, String... filenamePatterns) {
+    public boolean containsAllFilesToDepth(Path sourcePath, int maxDepth, String... filenamePatterns) {
         return fileFinder.containsAllFilesToDepth(sourcePath, maxDepth, filenamePatterns)
     }
 
-    public File findFile(String sourcePath, String filenamePattern) {
+    public File findFile(Path sourcePath, String filenamePattern) {
         return fileFinder.findFile(sourcePath, filenamePattern)
     }
 
@@ -149,16 +141,16 @@ class DetectFileManager {
         return fileFinder.findFiles(sourceDirectory, filenamePattern)
     }
 
-    public File[] findFilesToDepth(String sourceDirectory, String filenamePattern, int maxDepth) {
-        return findFilesToDepth(new File(sourceDirectory), filenamePattern, maxDepth)
+    public File[] findFilesToDepth(Path sourceDirectory, String filenamePattern, int maxDepth) {
+        return findFilesToDepth(sourceDirectory.toFile(), filenamePattern, maxDepth)
     }
 
     public File[] findFilesToDepth(File sourceDirectory, String filenamePattern, int maxDepth) {
         return fileFinder.findFilesToDepth(sourceDirectory, filenamePattern, maxDepth)
     }
 
-    public File[] findDirectoriesContainingDirectoriesToDepth(String sourceDirectory, String filenamePattern, int maxDepth) {
-        return fileFinder.findDirectoriesContainingDirectoriesToDepth(new File(sourceDirectory), filenamePattern, maxDepth)
+    public File[] findDirectoriesContainingDirectoriesToDepth(Path sourceDirectory, String filenamePattern, int maxDepth) {
+        return fileFinder.findDirectoriesContainingDirectoriesToDepth(sourceDirectory.toFile(), filenamePattern, maxDepth)
     }
 
     public File[] findDirectoriesContainingDirectoriesToDepth(File sourceDirectory, String filenamePattern, int maxDepth) {

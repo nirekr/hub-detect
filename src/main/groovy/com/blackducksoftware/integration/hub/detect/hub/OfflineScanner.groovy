@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.hub
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,7 +57,7 @@ class OfflineScanner {
     @Autowired
     Gson gson
 
-    void offlineScan(HubScanConfig hubScanConfig, String hubSignatureScannerOfflineLocalPath) {
+    void offlineScan(HubScanConfig hubScanConfig, Path hubSignatureScannerOfflineLocalPath) {
         def intLogger = new Slf4jIntLogger(logger)
 
         def hubServerConfig = new HubServerConfig(null, 0, null, null, false)
@@ -72,7 +74,7 @@ class OfflineScanner {
         def simpleScanService = new SimpleScanService(intLogger, gson, hubServerConfig, hubSupportHelper, ciEnvironmentVariables, hubScanConfig, null, null)
         final CLILocation cliLocation = new CLILocation(silentLogger, hubScanConfig.getToolsDir())
         if (hubSignatureScannerOfflineLocalPath) {
-            cliLocation = new OfflineCLILocation(silentLogger, new File(hubSignatureScannerOfflineLocalPath))
+            cliLocation = new OfflineCLILocation(silentLogger, hubSignatureScannerOfflineLocalPath.toFile())
         }
 
         boolean cliInstalledOkay = checkCliInstall(cliLocation, silentLogger)

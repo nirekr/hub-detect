@@ -22,7 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
-import org.apache.commons.lang3.StringUtils
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -94,33 +95,33 @@ class GoDepBomTool extends BomTool {
     }
 
     List<DetectCodeLocation> extractDetectCodeLocations() {
-        String goDepExecutable = findGoDepExecutable()
+        Path goDepExecutable = findGoDepExecutable()
 
         DependencyGraph graph = goPackager.makeDependencyGraph(sourcePath, goDepExecutable)
-        ExternalId externalId = externalIdFactory.createPathExternalId(GOLANG, sourcePath)
+        ExternalId externalId = externalIdFactory.createPathExternalId(GOLANG, sourcePath.toRealPath().toString())
         DetectCodeLocation detectCodeLocation = new DetectCodeLocation(getBomToolType(), sourcePath, externalId, graph)
 
         [detectCodeLocation]
     }
 
-    private String findGoDepExecutable() {
-        String goDepPath = detectConfiguration.goDepPath
-        if (StringUtils.isBlank(goDepPath)) {
+    private Path findGoDepExecutable() {
+        Path goDepPath = detectConfiguration.goDepPath
+        if (goDepPath == null) {
             def goDep = getBuiltGoDep()
             if (goDep.exists()) {
-                goDepPath = goDep.getAbsolutePath()
+                goDepPath = goDep.toPath()
             } else {
                 goDepPath = executableManager.getExecutablePath(ExecutableType.GO_DEP, true, sourcePath)
             }
         }
-        if (!goDepPath?.trim()) {
+        if (goDepPath == null) {
             def goExecutable = executableManager.getExecutablePath(ExecutableType.GO, true, sourcePath)
             goDepPath = installGoDep(goExecutable)
         }
         goDepPath
     }
 
-    private String installGoDep(String goExecutable) {
+    private Path installGoDep(Path goExecutable) {
         File goDep = getBuiltGoDep()
         def goOutputDirectory = goDep.getParentFile()
         goOutputDirectory.mkdirs()
@@ -140,7 +141,7 @@ class GoDepBomTool extends BomTool {
             'github.com/golang/dep/cmd/dep'
         ])
         executableRunner.execute(buildGoDep)
-        goDep.getAbsolutePath()
+        goDep.toPath()
     }
 
     private File getBuiltGoDep() {

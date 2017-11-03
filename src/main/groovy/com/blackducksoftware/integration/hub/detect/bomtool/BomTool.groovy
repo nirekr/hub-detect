@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+
 import org.springframework.beans.factory.annotation.Autowired
 
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory
@@ -75,7 +77,7 @@ abstract class BomTool {
         extractDetectCodeLocations()
     }
 
-    String getSourcePath() {
+    Path getSourcePath() {
         detectConfiguration.sourcePath
     }
 
@@ -83,8 +85,8 @@ abstract class BomTool {
         detectConfiguration.sourceDirectory
     }
 
-    String findExecutablePath(ExecutableType executable, boolean searchSystemPath, String userPath) {
-        if (!userPath?.trim()) {
+    Path findExecutablePath(ExecutableType executable, boolean searchSystemPath, Path userPath) {
+        if (userPath == null) {
             return executableManager.getExecutablePath(executable, searchSystemPath, sourcePath)
         }
 

@@ -60,10 +60,10 @@ class CocoapodsBomTool extends BomTool {
     }
 
     List<DetectCodeLocation> extractDetectCodeLocations() {
-        final String podLockText = new File(sourcePath, PODFILE_LOCK_FILENAME).text
+        final String podLockText = new File(sourcePath.toFile(), PODFILE_LOCK_FILENAME).text
 
         DependencyGraph dependencyGraph = cocoapodsPackager.extractDependencyGraph(podLockText)
-        ExternalId externalId = externalIdFactory.createPathExternalId(Forge.COCOAPODS, sourcePath)
+        ExternalId externalId = externalIdFactory.createPathExternalId(Forge.COCOAPODS, sourcePath.toRealPath().toString())
 
         def codeLocation = new DetectCodeLocation(getBomToolType(), sourcePath, externalId, dependencyGraph)
         [codeLocation]

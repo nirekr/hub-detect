@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -51,8 +53,7 @@ class CondaBomTool extends BomTool {
     @Autowired
     ExternalIdFactory externalIdFactory
 
-
-    private String condaExecutablePath
+    private Path condaExecutablePath
 
     @Override
     public BomToolType getBomToolType() {
@@ -90,7 +91,7 @@ class CondaBomTool extends BomTool {
         String infoJsonText = condaInfoOutput.standardOutput
 
         DependencyGraph dependencyGraph = condaListParser.parse(listJsonText, infoJsonText)
-        ExternalId externalId = externalIdFactory.createPathExternalId(Forge.ANACONDA, detectConfiguration.sourcePath)
+        ExternalId externalId = externalIdFactory.createPathExternalId(Forge.ANACONDA, detectConfiguration.sourcePath.toRealPath().toString())
         def detectCodeLocation = new DetectCodeLocation(BomToolType.CONDA, detectConfiguration.sourcePath, externalId, dependencyGraph)
 
         [detectCodeLocation]

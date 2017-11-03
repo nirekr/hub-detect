@@ -64,10 +64,10 @@ class GoVndrBomTool extends BomTool {
         File sourceDirectory = detectConfiguration.sourceDirectory
 
         VndrParser vndrParser = new VndrParser(externalIdFactory)
-        def vendorConf = new File(sourcePath, VNDR_CONF_FILENAME)
+        def vendorConf = new File(sourcePath.toFile(), VNDR_CONF_FILENAME)
         List<String> venderConfContents = Files.readAllLines(vendorConf.toPath(), StandardCharsets.UTF_8)
         DependencyGraph dependencyGraph = vndrParser.parseVendorConf(venderConfContents)
-        ExternalId externalId = externalIdFactory.createPathExternalId(Forge.GOLANG, sourcePath)
+        ExternalId externalId = externalIdFactory.createPathExternalId(Forge.GOLANG, sourcePath.toRealPath().toString())
 
         def codeLocation = new DetectCodeLocation(getBomToolType(), sourcePath, externalId, dependencyGraph)
         [codeLocation]

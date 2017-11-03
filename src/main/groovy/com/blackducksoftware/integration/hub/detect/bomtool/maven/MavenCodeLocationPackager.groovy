@@ -22,6 +22,7 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool.maven
 
+import java.nio.file.Path
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -55,12 +56,12 @@ class MavenCodeLocationPackager {
     private int level
     private MutableDependencyGraph currentGraph = null
 
-    public ExternalIdFactory externalIdFactory;
+    public ExternalIdFactory externalIdFactory
     public MavenCodeLocationPackager(ExternalIdFactory externalIdFactory){
-        this.externalIdFactory = externalIdFactory;
+        this.externalIdFactory = externalIdFactory
     }
 
-    public List<DetectCodeLocation> extractCodeLocations(String sourcePath, String mavenOutputText, String excludedModules, String includedModules) {
+    public List<DetectCodeLocation> extractCodeLocations(Path sourcePath, String mavenOutputText, String excludedModules, String includedModules) {
         ExcludedIncludedFilter filter = new ExcludedIncludedFilter(excludedModules, includedModules)
         codeLocations = []
         currentCodeLocation = null
@@ -92,7 +93,7 @@ class MavenCodeLocationPackager {
 
             if (parsingProjectSection && currentCodeLocation == null) {
                 //this is the first line of a new code location, the following lines will be the tree of dependencies for this code location
-                currentGraph = new MutableMapDependencyGraph();
+                currentGraph = new MutableMapDependencyGraph()
                 DetectCodeLocation detectCodeLocation = createNewCodeLocation(sourcePath, line, currentGraph)
                 if (filter.shouldInclude(detectCodeLocation.getBomToolProjectName())) {
                     this.currentCodeLocation = detectCodeLocation
@@ -133,16 +134,16 @@ class MavenCodeLocationPackager {
                     if (level == previousLevel) {
                         //a sibling of the previous dependency
                         dependencyParentStack.pop()
-                        currentGraph.addParentWithChild(dependencyParentStack.peek(), dependency);
+                        currentGraph.addParentWithChild(dependencyParentStack.peek(), dependency)
                         dependencyParentStack.push(dependency)
                     } else if (level > previousLevel) {
                         //a child of the previous dependency
-                        currentGraph.addParentWithChild(dependencyParentStack.peek(), dependency);
+                        currentGraph.addParentWithChild(dependencyParentStack.peek(), dependency)
                         dependencyParentStack.push(dependency)
                     } else {
                         //a child of a dependency further back than 1 line
                         previousLevel.downto(level) { dependencyParentStack.pop() }
-                        currentGraph.addParentWithChild(dependencyParentStack.peek(), dependency);
+                        currentGraph.addParentWithChild(dependencyParentStack.peek(), dependency)
                         dependencyParentStack.push(dependency)
                     }
                 }
@@ -152,11 +153,11 @@ class MavenCodeLocationPackager {
         codeLocations
     }
 
-    DetectCodeLocation createNewCodeLocation(String sourcePath, String line, DependencyGraph graph) {
+    DetectCodeLocation createNewCodeLocation(Path sourcePath, String line, DependencyGraph graph) {
         Dependency dependency = textToDependency(line)
-        String codeLocationSourcePath = sourcePath
-        if (!sourcePath.endsWith(dependency.name)) {
-            codeLocationSourcePath += '/' + dependency.name
+        Path codeLocationSourcePath = sourcePath
+        if (!sourcePath.getFileName().toString().equals(dependency.name)) {
+            codeLocationSourcePath = codeLocationSourcePath.resolve(dependency.name)
         }
         new DetectCodeLocation(BomToolType.MAVEN, codeLocationSourcePath, dependency.name, dependency.version, dependency.externalId, graph)
     }

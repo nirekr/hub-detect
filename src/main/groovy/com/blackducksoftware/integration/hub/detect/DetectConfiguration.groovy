@@ -24,6 +24,8 @@ package com.blackducksoftware.integration.hub.detect
 
 import java.lang.reflect.Modifier
 import java.nio.charset.StandardCharsets
+import java.nio.file.Path
+import java.nio.file.Paths
 
 import org.apache.commons.lang3.BooleanUtils
 import org.apache.commons.lang3.StringUtils
@@ -610,19 +612,19 @@ class DetectConfiguration {
         return ''
     }
 
-    private String getInspectorAirGapPath(String inspectorLocationProperty, String inspectorName) {
+    private Path getInspectorAirGapPath(String inspectorLocationProperty, String inspectorName) {
         if (!inspectorLocationProperty?.trim()) {
             try {
                 File detectJar = new File(guessDetectJarLocation())
                 File inspectorsDirectory = new File(detectJar.getParentFile(), 'packaged-inspectors')
                 File inspectorAirGapDirectory = new File(inspectorsDirectory, inspectorName)
-                return inspectorAirGapDirectory.getCanonicalPath()
+                return inspectorAirGapDirectory.toPath()
             } catch (final Exception e) {
                 logger.debug("Exception encountered when guessing air gap path for ${inspectorName}, returning the detect property instead")
                 logger.debug(e.getMessage())
             }
         }
-        return inspectorLocationProperty
+        return Paths.get(inspectorLocationProperty)
     }
 
     public void logConfiguration() {
@@ -722,17 +724,17 @@ class DetectConfiguration {
     public boolean getHubTrustCertificate() {
         return BooleanUtils.toBoolean(hubTrustCertificate)
     }
-    public String getSourcePath() {
-        return sourcePath
+    public Path getSourcePath() {
+        return Paths.get(sourcePath)
     }
-    public String getOutputDirectoryPath() {
-        return outputDirectoryPath
+    public Path getOutputDirectoryPath() {
+        return Paths.get(outputDirectoryPath)
     }
-    public String getBdioOutputDirectoryPath() {
-        return bdioOutputDirectoryPath
+    public Path getBdioOutputDirectoryPath() {
+        return Paths.get(bdioOutputDirectoryPath)
     }
-    public String getScanOutputDirectoryPath() {
-        return scanOutputDirectoryPath
+    public Path getScanOutputDirectoryPath() {
+        return Paths.get(scanOutputDirectoryPath)
     }
     public int getSearchDepth() {
         return convertInt(searchDepth)
@@ -809,11 +811,11 @@ class DetectConfiguration {
     public String getMavenScope() {
         return mavenScope
     }
-    public String getGradlePath() {
-        return gradlePath
+    public Path getGradlePath() {
+        return Paths.get(gradlePath)
     }
-    public String getMavenPath() {
-        return mavenPath
+    public Path getMavenPath() {
+        return Paths.get(mavenPath)
     }
     public String getMavenExcludedModuleNames() {
         return mavenExcludedModuleNames
@@ -824,20 +826,20 @@ class DetectConfiguration {
     public String getMavenBuildCommand() {
         return mavenBuildCommand
     }
-    public String getNugetPath() {
-        return nugetPath
+    public Path getNugetPath() {
+        return Paths.get(nugetPath)
     }
-    public String getNpmPath() {
-        return npmPath
+    public Path getNpmPath() {
+        return Paths.get(npmPath)
     }
     public boolean getNpmIncludeDevDependencies() {
         return BooleanUtils.toBoolean(npmIncludeDevDependencies)
     }
-    public String getNpmNodePath() {
-        return npmNodePath
+    public Path getNpmNodePath() {
+        return Paths.get(npmNodePath)
     }
-    public String getPearPath() {
-        return pearPath
+    public Path getPearPath() {
+        return Paths.get(pearPath)
     }
     public boolean getPearOnlyRequiredDependencies() {
         return BooleanUtils.toBoolean(pearOnlyRequiredDependencies)
@@ -848,23 +850,23 @@ class DetectConfiguration {
     public boolean getPythonThreeOverride() {
         return BooleanUtils.toBoolean(pythonThreeOverride)
     }
-    public String getPythonPath() {
-        return pythonPath
+    public Path getPythonPath() {
+        return Paths.get(pythonPath)
     }
-    public String getRequirementsFilePath() {
-        return requirementsFilePath
+    public Path getRequirementsFilePath() {
+        return Paths.get(requirementsFilePath)
     }
-    public String getGoDepPath() {
-        return goDepPath
+    public Path getGoDepPath() {
+        return Paths.get(goDepPath)
     }
     public boolean getGoRunDepInit() {
         return BooleanUtils.toBoolean(goRunDepInit)
     }
-    public String getDockerPath() {
-        return dockerPath
+    public Path getDockerPath() {
+        return Paths.get(dockerPath)
     }
-    public String getDockerInspectorPath() {
-        return dockerInspectorPath
+    public Path getDockerInspectorPath() {
+        return Paths.get(dockerInspectorPath)
     }
     public String getDockerInspectorVersion() {
         return dockerInspectorVersion
@@ -875,8 +877,8 @@ class DetectConfiguration {
     public String getDockerImage() {
         return dockerImage
     }
-    public String getBashPath() {
-        return bashPath
+    public Path getBashPath() {
+        return Paths.get(bashPath)
     }
     public String getLoggingLevel() {
         return loggingLevel
@@ -902,8 +904,8 @@ class DetectConfiguration {
     public List<String> getHubSignatureScannerPathsToExclude() {
         return excludedScanPaths
     }
-    public String getHubSignatureScannerOfflineLocalPath() {
-        return hubSignatureScannerOfflineLocalPath
+    public Path getHubSignatureScannerOfflineLocalPath() {
+        return Paths.get(hubSignatureScannerOfflineLocalPath)
     }
     public String getHubSignatureScannerHostUrl() {
         return hubSignatureScannerHostUrl
@@ -917,14 +919,14 @@ class DetectConfiguration {
     public boolean getHubSignatureScannerDisabled() {
         return BooleanUtils.toBoolean(hubSignatureScannerDisabled)
     }
-    public String getPerlPath() {
-        return perlPath?.trim()
+    public Path getPerlPath() {
+        return Paths.get(perlPath?.trim())
     }
-    public String getCpanPath() {
-        return cpanPath?.trim()
+    public Path getCpanPath() {
+        return Paths.get(cpanPath?.trim())
     }
-    public String getCpanmPath() {
-        return cpanmPath?.trim()
+    public Path getCpanmPath() {
+        return Paths.get(cpanmPath?.trim())
     }
     public String getSbtExcludedConfigurationNames() {
         return sbtExcludedConfigurationNames
@@ -944,8 +946,8 @@ class DetectConfiguration {
     public String getAggregateBomName() {
         return aggregateBomName?.trim()
     }
-    public String getCondaPath() {
-        return condaPath?.trim()
+    public Path getCondaPath() {
+        return Paths.get(condaPath?.trim())
     }
     public String getCondaEnvironmentName() {
         return condaEnvironmentName?.trim()
@@ -953,22 +955,22 @@ class DetectConfiguration {
     public Boolean getRiskReportPdf() {
         return riskReportPdf
     }
-    public String getRiskReportPdfOutputDirectory() {
-        return riskReportPdfOutputDirectory
+    public Path getRiskReportPdfOutputDirectory() {
+        return Paths.get(riskReportPdfOutputDirectory)
     }
     public Boolean getNoticesReport() {
         return noticesReport
     }
-    public String getNoticesReportOutputDirectory() {
-        return noticesReportOutputDirectory
+    public Path getNoticesReportOutputDirectory() {
+        return Paths.get(noticesReportOutputDirectory)
     }
-    public String getDockerInspectorAirGapPath() {
+    public Path getDockerInspectorAirGapPath() {
         return getInspectorAirGapPath(dockerInspectorAirGapPath, DOCKER)
     }
-    public String getGradleInspectorAirGapPath() {
+    public Path getGradleInspectorAirGapPath() {
         return getInspectorAirGapPath(gradleInspectorAirGapPath, GRADLE)
     }
-    public String getNugetInspectorAirGapPath() {
+    public Path getNugetInspectorAirGapPath() {
         return getInspectorAirGapPath(nugetInspectorAirGapPath, NUGET)
     }
     public String getNugetPackagesRepoUrl() {

@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,7 +56,7 @@ class GradleBomTool extends BomTool {
     @Autowired
     GradleInspectorManager gradleInspectorManager
 
-    private String gradleExecutable
+    private Path gradleExecutable
 
     @Override
     BomToolType getBomToolType() {
@@ -88,8 +90,8 @@ class GradleBomTool extends BomTool {
         codeLocations
     }
 
-    private String findGradleExecutable(String sourcePath) {
-        String gradlePath = findExecutablePath(ExecutableType.GRADLEW, false, detectConfiguration.getGradlePath())
+    private Path findGradleExecutable(Path sourcePath) {
+        Path gradlePath = findExecutablePath(ExecutableType.GRADLEW, false, detectConfiguration.getGradlePath())
 
         if (!gradlePath) {
             logger.debug('gradle wrapper not found - trying to find gradle on the PATH')
@@ -106,7 +108,7 @@ class GradleBomTool extends BomTool {
         ])
         executableRunner.execute(executable)
 
-        File buildDirectory = new File(sourcePath, 'build')
+        File buildDirectory = new File(sourcePath.toFile(), 'build')
         File blackduckDirectory = new File(buildDirectory, 'blackduck')
 
         File[] codeLocationFiles = detectFileManager.findFiles(blackduckDirectory, '*_dependencyGraph.txt')

@@ -72,8 +72,8 @@ class HubSignatureScanner {
     private Set<String> registeredPathsToExclude = []
 
     public void registerPathToScan(File file, String... fileNamesToExclude) {
-        boolean scannerEnabled = !detectConfiguration.hubSignatureScannerDisabled;
-        boolean customPathOverride = detectConfiguration.hubSignatureScannerPaths.size() > 0;
+        boolean scannerEnabled = !detectConfiguration.hubSignatureScannerDisabled
+        boolean customPathOverride = detectConfiguration.hubSignatureScannerPaths.size() > 0
 
         if (scannerEnabled && !customPathOverride) {
             String matchingExcludedPath = detectConfiguration.hubSignatureScannerPathsToExclude.find {
@@ -106,9 +106,9 @@ class HubSignatureScanner {
                 logger.warn("Tried to register a scan for ${file.canonicalPath} but it doesn't appear to exist or it isn't a file or directory.")
             }
         } else if (!scannerEnabled) {
-            logger.info("Not registering path ${file.canonicalPath}, scan is disabled");
+            logger.info("Not registering path ${file.canonicalPath}, scan is disabled")
         }else if (customPathOverride){
-            logger.info("Not scanning path ${file.canonicalPath}, scan paths provided");
+            logger.info("Not scanning path ${file.canonicalPath}, scan paths provided")
         }
     }
 
@@ -173,7 +173,7 @@ class HubSignatureScanner {
             hubScanConfigBuilder.setDryRun(true)
 
             if (!detectConfiguration.hubSignatureScannerOfflineLocalPath) {
-                File scannerDirectory = new File(detectConfiguration.scanOutputDirectoryPath)
+                File scannerDirectory = detectConfiguration.scanOutputDirectoryPath.toFile()
                 File toolsDirectory = detectFileManager.createDirectory('tools', false)
                 hubScanConfigBuilder.toolsDir = toolsDirectory
             }
@@ -188,7 +188,7 @@ class HubSignatureScanner {
     }
 
     private HubScanConfigBuilder createScanConfigBuilder(DetectProject detectProject, String canonicalPath) {
-        File scannerDirectory = new File(detectConfiguration.scanOutputDirectoryPath)
+        File scannerDirectory = detectConfiguration.scanOutputDirectoryPath.toFile()
         File toolsDirectory = detectFileManager.createDirectory('tools', false)
 
         HubScanConfigBuilder hubScanConfigBuilder = new HubScanConfigBuilder()

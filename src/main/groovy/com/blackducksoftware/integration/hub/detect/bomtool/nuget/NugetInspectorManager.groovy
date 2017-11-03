@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool.nuget
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,7 +40,7 @@ import groovy.transform.TypeChecked
 class NugetInspectorManager {
     private final Logger logger = LoggerFactory.getLogger(NugetInspectorManager.class)
 
-    private String nugetInspectorExecutable
+    private Path nugetInspectorExecutable
     private String inspectorVersion
 
     @Autowired
@@ -47,23 +49,23 @@ class NugetInspectorManager {
     @Autowired
     ExecutableRunner executableRunner
 
-    public String getNugetInspectorExecutablePath() {
+    public Path getNugetInspectorExecutablePath() {
         return nugetInspectorExecutable
     }
 
-    public String getInspectorVersion(final String nugetExecutablePath) {
+    public String getInspectorVersion(final Path nugetExecutablePath) {
         if ('latest'.equalsIgnoreCase(detectConfiguration.getNugetInspectorPackageVersion())) {
             if (!inspectorVersion) {
                 final def nugetOptions = [
                     'list',
                     detectConfiguration.getNugetInspectorPackageName()
                 ]
-                def airGapNugetInspectorDirectory = new File(detectConfiguration.getNugetInspectorAirGapPath())
+                def airGapNugetInspectorDirectory = detectConfiguration.getNugetInspectorAirGapPath().toFile()
                 if (airGapNugetInspectorDirectory.exists()) {
                     logger.debug('Running in airgap mode. Resolving version from local path')
                     nugetOptions.addAll([
                         '-Source',
-                        detectConfiguration.getNugetInspectorAirGapPath()
+                        detectConfiguration.getNugetInspectorAirGapPath().toRealPath().toString()
                     ])
                 } else {
                     logger.debug('Running online. Resolving version through nuget')
@@ -88,10 +90,10 @@ class NugetInspectorManager {
         return inspectorVersion
     }
 
-    private void installInspector(final String nugetExecutablePath, final File outputDirectory) {
+    private void installInspector(final Path nugetExecutablePath, final File outputDirectory) {
         File toolsDirectory
 
-        def airGapNugetInspectorDirectory = new File(detectConfiguration.getNugetInspectorAirGapPath())
+        def airGapNugetInspectorDirectory = detectConfiguration.getNugetInspectorAirGapPath().toFile()
         if (airGapNugetInspectorDirectory.exists()) {
             logger.debug('Running in airgap mode. Resolving from local path')
             toolsDirectory = new File(airGapNugetInspectorDirectory, 'tools')
@@ -124,6 +126,6 @@ class NugetInspectorManager {
             return null
         }
 
-        nugetInspectorExecutable = inspectorExe.getCanonicalPath()
+        nugetInspectorExecutable = inspectorExe.toPath()
     }
 }

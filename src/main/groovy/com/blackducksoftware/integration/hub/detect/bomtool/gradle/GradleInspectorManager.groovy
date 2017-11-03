@@ -70,7 +70,7 @@ class GradleInspectorManager {
             if (!inspectorVersion) {
                 try {
                     InputStream inputStream
-                    File airGapMavenMetadataFile = new File(detectConfiguration.getGradleInspectorAirGapPath(), 'maven-metadata.xml')
+                    File airGapMavenMetadataFile = detectConfiguration.getGradleInspectorAirGapPath().resolve('maven-metadata.xml').toFile()
                     if (airGapMavenMetadataFile.exists()) {
                         inputStream = new FileInputStream(airGapMavenMetadataFile)
                     } else {
@@ -107,7 +107,7 @@ class GradleInspectorManager {
             ]
 
             try {
-                def gradleInspectorAirGapDirectory = new File(detectConfiguration.getGradleInspectorAirGapPath())
+                def gradleInspectorAirGapDirectory = detectConfiguration.getGradleInspectorAirGapPath().toFile()
                 if (gradleInspectorAirGapDirectory.exists()) {
                     model.put('airGapLibsPath', StringEscapeUtils.escapeJava(gradleInspectorAirGapDirectory.getCanonicalPath()))
                 }

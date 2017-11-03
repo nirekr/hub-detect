@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool.npm
 
+import java.nio.file.Path
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -52,7 +54,7 @@ class NpmLockfilePackager {
     @Autowired
     ExternalIdFactory externalIdFactory
 
-    public DetectCodeLocation parse(String sourcePath, String lockFileText) {
+    public DetectCodeLocation parse(Path sourcePath, String lockFileText) {
         NpmProject npmProject = gson.fromJson(lockFileText, NpmProject.class)
 
         NameVersionNode root = new NameVersionNodeImpl([name: npmProject.name, version: npmProject.version])
@@ -70,6 +72,6 @@ class NpmLockfilePackager {
 
         ExternalId projectId = externalIdFactory.createNameVersionExternalId(Forge.NPM, npmProject.name, npmProject.version)
         DependencyGraph graph = nameVersionNodeTransformer.createDependencyGraph(Forge.NPM, builder.build(), false)
-        DetectCodeLocation codeLocation = new DetectCodeLocation(BomToolType.NPM, sourcePath, npmProject.name, npmProject.version, projectId, graph);
+        DetectCodeLocation codeLocation = new DetectCodeLocation(BomToolType.NPM, sourcePath, npmProject.name, npmProject.version, projectId, graph)
     }
 }

@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.codelocation;
 
+import java.nio.file.Paths;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,7 +40,7 @@ public abstract class CodeLocationNameProvider {
     public String cleanScanTargetPath(final CodeLocationName codeLocationName) {
         final String scanTargetPath = codeLocationName.getScanTargetPath();
         final String sourcePath = codeLocationName.getSourcePath();
-        final String finalSourcePathPiece = detectFileManager.extractFinalPieceFromPath(sourcePath);
+        final String finalSourcePathPiece = Paths.get(codeLocationName.getSourcePath()).getFileName().toString();
         String cleanedTargetPath = "";
         if (StringUtils.isNotBlank(scanTargetPath) && StringUtils.isNotBlank(finalSourcePathPiece)) {
             cleanedTargetPath = scanTargetPath.replace(sourcePath, finalSourcePathPiece);

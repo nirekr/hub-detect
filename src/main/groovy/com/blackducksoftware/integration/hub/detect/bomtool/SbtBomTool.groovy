@@ -22,6 +22,9 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+import java.nio.file.Paths
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -81,7 +84,8 @@ class SbtBomTool extends BomTool {
         List<DetectCodeLocation> codeLocations = new ArrayList<DetectCodeLocation>()
 
         project.modules.each { module ->
-            DetectCodeLocation codeLocation = new DetectCodeLocation(getBomToolType(), module.name, project.projectName, project.projectVersion, project.projectExternalId, module.graph)
+            Path modulePath = Paths.get(module.name)
+            DetectCodeLocation codeLocation = new DetectCodeLocation(getBomToolType(), modulePath, project.projectName, project.projectVersion, project.projectExternalId, module.graph)
             codeLocations.add(codeLocation)
         }
 
@@ -110,9 +114,9 @@ class SbtBomTool extends BomTool {
             result.projectExternalId = externalIdFactory.createMavenExternalId(modules[0].org, modules[0].name, modules[0].version)
         } else {
             logger.warn("Found more than one root project, using source path for project name.")
-            result.projectName = detectFileManager.extractFinalPieceFromPath(sourcePath)
+            result.projectName = sourcePath.getFileName().toString()
             result.projectVersion = findFirstModuleVersion(modules, result.projectName, "root")
-            result.projectExternalId = externalIdFactory.createPathExternalId(Forge.MAVEN, sourcePath)
+            result.projectExternalId = externalIdFactory.createPathExternalId(Forge.MAVEN, sourcePath.toRealPath().toString())
 
             if (result.projectVersion == null && modules.size() > 1) {
                 logger.warn("Getting version from first project: " + modules[0].name)
@@ -182,9 +186,9 @@ class SbtBomTool extends BomTool {
         return true
     }
 
-    Boolean isInProject(File file, String sourcePath) {
-        def projectPath = new File(sourcePath, PROJECT_FOLDER)
-        return file.getCanonicalPath().startsWith(projectPath.getCanonicalPath())
+    Boolean isInProject(File file, Path sourcePath) {
+        def projectPath = sourcePath.resolve(PROJECT_FOLDER)
+        return file.getCanonicalPath().startsWith(projectPath.toRealPath().toString())
     }
 
     List<SbtDependencyModule> extractReportModules(File reportPath, File source, String included, String excluded, List<String> usedReports) {
@@ -200,7 +204,7 @@ class SbtBomTool extends BomTool {
             if (reportFiles == null || reportFiles.size() <= 0) {
                 logger.debug("No reports were found in: ${reportPath}")
             } else {
-                SbtPackager sbtPackager = new SbtPackager(externalIdFactory);
+                SbtPackager sbtPackager = new SbtPackager(externalIdFactory)
                 List<SbtDependencyModule> aggregatedModules = sbtPackager.makeModuleAggregate(reportFiles, included, excluded)
 
                 if (aggregatedModules == null) {

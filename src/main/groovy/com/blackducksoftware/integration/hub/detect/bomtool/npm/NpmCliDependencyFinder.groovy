@@ -22,6 +22,7 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool.npm
 
+import java.nio.file.Path
 import java.util.Map.Entry
 
 import org.slf4j.Logger
@@ -50,12 +51,12 @@ class NpmCliDependencyFinder {
     private static final String JSON_VERSION = 'version'
     private static final String JSON_DEPENDENCIES = 'dependencies'
 
-    public ExternalIdFactory externalIdFactory;
+    public ExternalIdFactory externalIdFactory
     public NpmCliDependencyFinder(ExternalIdFactory externalIdFactory){
-        this.externalIdFactory = externalIdFactory;
+        this.externalIdFactory = externalIdFactory
     }
 
-    public DetectCodeLocation generateCodeLocation(String sourcePath, File npmLsOutputFile) {
+    public DetectCodeLocation generateCodeLocation(Path sourcePath, File npmLsOutputFile) {
         if (npmLsOutputFile?.length() > 0) {
             logger.info("Generating results from npm ls -json")
             return convertNpmJsonFileToCodeLocation(sourcePath, npmLsOutputFile.text)
@@ -66,9 +67,9 @@ class NpmCliDependencyFinder {
         null
     }
 
-    private DetectCodeLocation convertNpmJsonFileToCodeLocation(String sourcePath, String npmLsOutput) {
+    private DetectCodeLocation convertNpmJsonFileToCodeLocation(Path sourcePath, String npmLsOutput) {
         JsonObject npmJson = new JsonParser().parse(npmLsOutput) as JsonObject
-        MutableDependencyGraph graph = new MutableMapDependencyGraph();
+        MutableDependencyGraph graph = new MutableMapDependencyGraph()
 
         String projectName = npmJson.getAsJsonPrimitive(JSON_NAME)?.getAsString()
         String projectVersion = npmJson.getAsJsonPrimitive(JSON_VERSION)?.getAsString()

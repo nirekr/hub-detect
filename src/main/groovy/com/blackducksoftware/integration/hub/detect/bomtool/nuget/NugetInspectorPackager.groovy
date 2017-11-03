@@ -23,6 +23,7 @@
 package com.blackducksoftware.integration.hub.detect.bomtool.nuget
 
 import java.nio.charset.StandardCharsets
+import java.nio.file.Paths
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -106,7 +107,7 @@ class NugetInspectorPackager {
                 if (!projectVersionName) {
                     projectVersionName = container.version
                 }
-                new DetectCodeLocation(BomToolType.NUGET, sourcePath, projectName, projectVersionName, externalIdFactory.createNameVersionExternalId(Forge.NUGET, projectName, projectVersionName), children)
+                new DetectCodeLocation(BomToolType.NUGET, Paths.get(sourcePath), projectName, projectVersionName, externalIdFactory.createNameVersionExternalId(Forge.NUGET, projectName, projectVersionName), children)
             }
             return codeLocations
         } else if (NugetContainerType.PROJECT == nugetContainer.type) {
@@ -118,7 +119,7 @@ class NugetInspectorPackager {
             def children = builder.createDependencyGraph(nugetContainer.dependencies)
 
             return [
-                new DetectCodeLocation(BomToolType.NUGET, sourcePath, projectName, projectVersionName, externalIdFactory.createNameVersionExternalId(Forge.NUGET, projectName, projectVersionName), children)
+                new DetectCodeLocation(BomToolType.NUGET, Paths.get(sourcePath), projectName, projectVersionName, externalIdFactory.createNameVersionExternalId(Forge.NUGET, projectName, projectVersionName), children)
             ]
         }
     }

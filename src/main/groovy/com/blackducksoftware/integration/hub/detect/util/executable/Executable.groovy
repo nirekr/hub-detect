@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.util.executable
 
+import java.nio.file.Path
+
 import org.apache.commons.lang3.StringUtils
 
 import groovy.transform.TypeChecked
@@ -30,16 +32,16 @@ import groovy.transform.TypeChecked
 class Executable {
     File workingDirectory
     Map<String, String> environmentVariables = [:]
-    String executablePath
+    Path executablePath
     List<String> executableArguments = []
 
-    Executable(File workingDirectory, final String executablePath, List<String> executableArguments) {
+    Executable(File workingDirectory, final Path executablePath, List<String> executableArguments) {
         this.workingDirectory = workingDirectory
         this.executablePath = executablePath
         this.executableArguments.addAll(executableArguments)
     }
 
-    Executable(File workingDirectory, Map<String, String> environmentVariables, final String executablePath, List<String> executableArguments) {
+    Executable(File workingDirectory, Map<String, String> environmentVariables, final Path executablePath, List<String> executableArguments) {
         this.workingDirectory = workingDirectory
         this.environmentVariables.putAll(environmentVariables)
         this.executablePath = executablePath

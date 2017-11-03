@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -124,12 +126,12 @@ class PipBomTool extends BomTool {
         projectName
     }
 
-    String getPythonPath() {
+    Path getPythonPath() {
         def pythonPath = detectConfiguration.pythonPath
 
         if (detectConfiguration.pythonThreeOverride){
             pythonPath = executableManager.getExecutablePath(ExecutableType.PYTHON3, true, detectConfiguration.sourcePath)
-        } else if (!pythonPath?.trim()) {
+        } else if (pythonPath == null) {
             pythonPath = executableManager.getExecutablePath(ExecutableType.PYTHON, true, detectConfiguration.sourcePath)
         }
 

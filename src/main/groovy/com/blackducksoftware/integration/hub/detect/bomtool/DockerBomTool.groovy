@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+
 import org.apache.commons.io.IOUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -72,8 +74,8 @@ class DockerBomTool extends BomTool {
     @Autowired
     DockerInspectorManager dockerInspectorManager
 
-    private String dockerExecutablePath
-    private String bashExecutablePath
+    private Path dockerExecutablePath
+    private Path bashExecutablePath
 
     @Override
     public BomToolType getBomToolType() {
@@ -118,7 +120,7 @@ class DockerBomTool extends BomTool {
         }
 
         String path = System.getenv('PATH')
-        File dockerExecutableFile = new File(dockerExecutablePath)
+        File dockerExecutableFile = dockerExecutablePath.toFile()
         path += File.pathSeparator + dockerExecutableFile.parentFile.getCanonicalPath()
         Map<String, String> environmentVariables = [PATH: path]
 

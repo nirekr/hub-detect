@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.util
 
+import java.nio.file.Path
+
 import org.apache.commons.io.FilenameUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -34,8 +36,8 @@ import groovy.transform.TypeChecked
 class FileFinder {
     private final Logger logger = LoggerFactory.getLogger(FileFinder.class)
 
-    boolean containsAllFiles(final String sourcePath, final String... filenamePatterns) {
-        final File sourceDirectory = new File(sourcePath)
+    boolean containsAllFiles(final Path sourcePath, final String... filenamePatterns) {
+        final File sourceDirectory = sourcePath.toFile()
         if (!sourcePath || !sourceDirectory.isDirectory()) {
             return false
         }
@@ -52,8 +54,8 @@ class FileFinder {
         return containsFiles
     }
 
-    boolean containsAllFilesToDepth(final String sourcePath, int maxDepth, final String... filenamePatterns) {
-        final File sourceDirectory = new File(sourcePath)
+    boolean containsAllFilesToDepth(final Path sourcePath, int maxDepth, final String... filenamePatterns) {
+        final File sourceDirectory = sourcePath.toFile()
         if (!sourcePath || !sourceDirectory.isDirectory()) {
             return false
         }
@@ -70,8 +72,8 @@ class FileFinder {
         return containsFiles
     }
 
-    File findFile(final String sourcePath, final String filenamePattern) {
-        File sourceDirectory = new File(sourcePath)
+    File findFile(final Path sourcePath, final String filenamePattern) {
+        File sourceDirectory = sourcePath.toFile()
         findFile(sourceDirectory, filenamePattern)
     }
 

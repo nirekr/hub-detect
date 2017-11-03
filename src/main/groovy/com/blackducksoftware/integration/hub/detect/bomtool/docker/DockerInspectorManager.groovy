@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool.docker
 
+import java.nio.file.Path
+
 import org.apache.commons.lang3.math.NumberUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -61,7 +63,7 @@ class DockerInspectorManager {
     private File dockerInspectorShellScript
     private String inspectorVersion
 
-    String getInspectorVersion(String bashExecutablePath) {
+    String getInspectorVersion(Path bashExecutablePath) {
         if ('latest'.equalsIgnoreCase(detectConfiguration.getDockerInspectorVersion())) {
             if (!inspectorVersion) {
                 File dockerPropertiesFile = detectFileManager.createFile(BomToolType.DOCKER, 'application.properties')
@@ -86,11 +88,11 @@ class DockerInspectorManager {
     private File getShellScript() {
         if (!dockerInspectorShellScript) {
             File shellScriptFile
-            def airGapHubDockerInspectorShellScript = new File(detectConfiguration.getDockerInspectorAirGapPath(), 'hub-docker-inspector.sh')
+            def airGapHubDockerInspectorShellScript = detectConfiguration.getDockerInspectorAirGapPath().resolve('hub-docker-inspector.sh').toFile()
             logger.debug("Verifying air gap shell script present at ${airGapHubDockerInspectorShellScript.getCanonicalPath()}")
 
             if (detectConfiguration.dockerInspectorPath) {
-                shellScriptFile = new File(detectConfiguration.dockerInspectorPath)
+                shellScriptFile = detectConfiguration.dockerInspectorPath.toFile()
             } else if (airGapHubDockerInspectorShellScript.exists()) {
                 shellScriptFile = airGapHubDockerInspectorShellScript
             } else {

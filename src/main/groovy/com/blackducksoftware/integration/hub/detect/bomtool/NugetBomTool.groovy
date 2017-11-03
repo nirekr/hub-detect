@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+
 import org.apache.commons.io.FileUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -53,7 +55,7 @@ class NugetBomTool extends BomTool {
     @Autowired
     NugetInspectorManager nugetInspectorManager
 
-    private String nugetExecutable
+    private Path nugetExecutable
     private File outputDirectory
 
     BomToolType getBomToolType() {

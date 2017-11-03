@@ -23,6 +23,7 @@
 package com.blackducksoftware.integration.hub.detect.bomtool.pip
 
 import java.nio.charset.StandardCharsets
+import java.nio.file.Path
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -55,13 +56,13 @@ class PipInspectorManager {
         detectFileManager.writeToFile(inspectorScript, inpsectorScriptContents)
     }
 
-    String runInspector(File sourceDirectory, String pythonPath, File inspectorScript, String projectName, String requirementsFilePath) {
+    String runInspector(File sourceDirectory, Path pythonPath, File inspectorScript, String projectName, Path requirementsFilePath) {
         List<String> inspectorArguments = [
             inspectorScript.absolutePath
         ]
 
         if (requirementsFilePath) {
-            def requirementsFile = new File(requirementsFilePath)
+            def requirementsFile = requirementsFilePath.toFile()
             inspectorArguments.add("--requirements=${requirementsFile.absolutePath}" as String)
         }
 

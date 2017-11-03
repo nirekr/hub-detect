@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool.go
 
+import java.nio.file.Path
+
 import org.apache.commons.io.FileUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -55,16 +57,16 @@ class DepPackager {
     @Autowired
     ExternalIdFactory externalIdFactory
 
-    public DependencyGraph makeDependencyGraph(final String sourcePath, String goDepExecutable) {
+    public DependencyGraph makeDependencyGraph(final Path sourcePath, Path goDepExecutable) {
         GopkgLockParser gopkgLockParser = new GopkgLockParser(externalIdFactory)
-        String goDepContents = getGopkgLockContents(new File(sourcePath), goDepExecutable)
+        String goDepContents = getGopkgLockContents(sourcePath.toFile(), goDepExecutable)
         if (goDepContents?.trim()) {
             return gopkgLockParser.parseDepLock(goDepContents)
         }
         return null
     }
 
-    private String getGopkgLockContents(File file, String goDepExecutable) {
+    private String getGopkgLockContents(File file, Path goDepExecutable) {
         def gopkgLockFile = new File(file, "Gopkg.lock")
         if (gopkgLockFile.exists()) {
             return gopkgLockFile.text
@@ -80,24 +82,24 @@ class DepPackager {
         boolean vendorDirectoryExistedBefore = vendorDirectory.exists()
         def vendorDirectoryBackup = new File(file, "vendor_old")
         if (vendorDirectoryExistedBefore) {
-            logger.info("Backing up ${vendorDirectory.getAbsolutePath()} to ${vendorDirectoryBackup.getAbsolutePath()}")
+            logger.info("Backing up ${vendorDirectory.getCanonicalPath()} to ${vendorDirectoryBackup.getCanonicalPath()}")
             FileUtils.moveDirectory(vendorDirectory, vendorDirectoryBackup)
         }
 
         def gopkgLockContents = null
         try{
-            logger.info("Running ${goDepExecutable} 'init' on path ${file.getAbsolutePath()}")
+            logger.info("Running ${goDepExecutable.toRealPath().toString()} 'init' on path ${file.getCanonicalPath()}")
             Executable executable = new Executable(file, goDepExecutable, ['init'])
             executableRunner.execute(executable)
         } catch (ExecutableRunnerException e) {
-            logger.error("Failed to run ${goDepExecutable} 'init' on path ${file.getAbsolutePath()}, ${e.getMessage()}")
+            logger.error("Failed to run ${goDepExecutable.toRealPath().toString()} 'init' on path ${file.getCanonicalPath()}, ${e.getMessage()}")
         }
         try{
-            logger.info("Running ${goDepExecutable} 'ensure -update' on path ${file.getAbsolutePath()}")
+            logger.info("Running ${goDepExecutable.toRealPath().toString()} 'ensure -update' on path ${file.getCanonicalPath()}")
             Executable executable = new Executable(file, goDepExecutable, ['ensure', '-update'])
             executableRunner.execute(executable)
         } catch (ExecutableRunnerException e) {
-            logger.error("Failed to run ${goDepExecutable} 'ensure -update' on path ${file.getAbsolutePath()}, ${e.getMessage()}")
+            logger.error("Failed to run ${goDepExecutable.toRealPath().toString()} 'ensure -update' on path ${file.getCanonicalPath()}, ${e.getMessage()}")
         }
         if (gopkgLockFile.exists()) {
             gopkgLockContents = gopkgLockFile.text
@@ -105,7 +107,7 @@ class DepPackager {
             gopkgTomlFile.delete()
             FileUtils.deleteDirectory(vendorDirectory)
             if (vendorDirectoryExistedBefore) {
-                logger.info("Restoring back up ${vendorDirectory.getAbsolutePath()} from ${vendorDirectoryBackup.getAbsolutePath()}")
+                logger.info("Restoring back up ${vendorDirectory.getCanonicalPath()} from ${vendorDirectoryBackup.getCanonicalPath()}")
                 FileUtils.moveDirectory(vendorDirectoryBackup, vendorDirectory)
             }
         }

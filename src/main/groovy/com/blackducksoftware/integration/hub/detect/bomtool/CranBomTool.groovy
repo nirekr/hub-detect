@@ -70,7 +70,7 @@ class CranBomTool extends BomTool {
 
         List<String> packratLockText = Files.readAllLines(packratLockFile[0].toPath(), StandardCharsets.UTF_8)
         DependencyGraph dependencyGraph = packratPackager.extractProjectDependencies(packratLockText)
-        ExternalId externalId = externalIdFactory.createPathExternalId(Forge.CRAN, sourcePath)
+        ExternalId externalId = externalIdFactory.createPathExternalId(Forge.CRAN, sourcePath.toRealPath().toString())
 
         def codeLocation = new DetectCodeLocation(getBomToolType(), sourcePath, projectName, projectVersion, externalId, dependencyGraph)
         [codeLocation]

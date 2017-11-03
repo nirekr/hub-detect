@@ -23,7 +23,10 @@
 package com.blackducksoftware.integration.hub.detect.util.executable;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
@@ -66,19 +69,18 @@ public class ExecutableManager {
         return executableType.getExecutable();
     }
 
-    public String getExecutablePath(final ExecutableType executableType, final boolean searchSystemPath, final String path) {
+    public Path getExecutablePath(final ExecutableType executableType, final boolean searchSystemPath, final Path path) {
         final File executable = getExecutable(executableType, searchSystemPath, path);
         if (executable != null) {
-            return executable.getAbsolutePath();
+            return executable.toPath();
         } else {
             return null;
         }
     }
 
-    public File getExecutable(final ExecutableType executableType, final boolean searchSystemPath, final String path) {
+    public File getExecutable(final ExecutableType executableType, final boolean searchSystemPath, final Path path) {
         final String executable = getExecutableName(executableType);
-        final String searchPath = path.trim();
-        File executableFile = findExecutableFileFromPath(searchPath, executable);
+        File executableFile = findExecutableFileFromPath(path, executable);
         if (searchSystemPath && (executableFile == null || !executableFile.exists())) {
             executableFile = findExecutableFileFromSystemPath(executable);
         }
@@ -87,11 +89,11 @@ public class ExecutableManager {
     }
 
     private File findExecutableFileFromSystemPath(final String executable) {
-        final String systemPath = System.getenv("PATH");
+        final Path systemPath = Paths.get(System.getenv("PATH"));
         return findExecutableFileFromPath(systemPath, executable);
     }
 
-    private File findExecutableFileFromPath(final String path, final String executableName) {
+    private File findExecutableFileFromPath(final Path path, final String executableName) {
         final List<String> executables;
         if (currentOs == OperatingSystemType.WINDOWS) {
             executables = Arrays.asList(executableName + ".cmd", executableName + ".bat", executableName + ".exe");
@@ -99,7 +101,8 @@ public class ExecutableManager {
             executables = Arrays.asList(executableName);
         }
 
-        for (final String pathPiece : path.split(File.pathSeparator)) {
+        for (final Iterator<Path> iterator = path.iterator(); iterator.hasNext();) {
+            final Path pathPiece = iterator.next();
             for (final String possibleExecutable : executables) {
                 final File foundFile = detectFileManager.findFile(pathPiece, possibleExecutable);
                 if (foundFile != null && foundFile.exists() && foundFile.canExecute()) {

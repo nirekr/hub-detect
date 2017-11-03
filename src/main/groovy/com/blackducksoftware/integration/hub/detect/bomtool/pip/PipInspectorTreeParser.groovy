@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool.pip
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,7 +54,7 @@ class PipInspectorTreeParser {
     @Autowired
     ExternalIdFactory externalIdFactory
 
-    DetectCodeLocation parse(String treeText, String sourcePath) {
+    DetectCodeLocation parse(String treeText, Path sourcePath) {
         def lines = treeText.trim().split(System.lineSeparator()).toList()
 
         MutableMapDependencyGraph dependencyGraph = null
@@ -85,7 +87,7 @@ class PipInspectorTreeParser {
             }
 
             if (line.contains(SEPARATOR) && !dependencyGraph) {
-                dependencyGraph = new MutableMapDependencyGraph();
+                dependencyGraph = new MutableMapDependencyGraph()
                 project = projectLineToDependency(line, sourcePath)
                 continue
             }
@@ -107,7 +109,7 @@ class PipInspectorTreeParser {
             if (tree.size() > 0){
                 dependencyGraph.addChildWithParents(next, [tree.peek()])
             } else {
-                dependencyGraph.addChildrenToRoot(next);
+                dependencyGraph.addChildrenToRoot(next)
             }
 
             indentation = currentIndentation
@@ -121,7 +123,7 @@ class PipInspectorTreeParser {
         }
     }
 
-    Dependency projectLineToDependency(String line, String sourcePath) {
+    Dependency projectLineToDependency(String line, Path sourcePath) {
         if (!line.contains(SEPARATOR)) {
             return null
         }
@@ -131,7 +133,7 @@ class PipInspectorTreeParser {
 
         def externalId = externalIdFactory.createNameVersionExternalId(Forge.PYPI, name, version)
         if (name.equals(UNKNOWN_PROJECT_NAME) || version.equals(UNKNOWN_PROJECT_VERSION) ){
-            externalId = externalIdFactory.createPathExternalId(Forge.PYPI, sourcePath)
+            externalId = externalIdFactory.createPathExternalId(Forge.PYPI, sourcePath.toRealPath().toString())
         }
 
         name = name.equals(UNKNOWN_PROJECT_NAME) ? '' : name
