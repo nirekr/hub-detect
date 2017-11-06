@@ -624,7 +624,7 @@ class DetectConfiguration {
                 logger.debug(e.getMessage())
             }
         }
-        return Paths.get(inspectorLocationProperty)
+        return convertPath(inspectorLocationProperty)
     }
 
     public void logConfiguration() {
@@ -685,6 +685,10 @@ class DetectConfiguration {
         return longObj == null ? 0L : longObj.longValue()
     }
 
+    private Path convertPath(String stringObj) {
+        return stringObj?.trim() ? Paths.get(stringObj) : null
+    }
+
     public boolean getCleanupBdioFiles() {
         return BooleanUtils.toBoolean(cleanupBdioFiles)
     }
@@ -725,16 +729,16 @@ class DetectConfiguration {
         return BooleanUtils.toBoolean(hubTrustCertificate)
     }
     public Path getSourcePath() {
-        return Paths.get(sourcePath)
+        return convertPath(sourcePath)
     }
     public Path getOutputDirectoryPath() {
-        return Paths.get(outputDirectoryPath)
+        return convertPath(outputDirectoryPath)
     }
     public Path getBdioOutputDirectoryPath() {
-        return Paths.get(bdioOutputDirectoryPath)
+        return convertPath(bdioOutputDirectoryPath)
     }
     public Path getScanOutputDirectoryPath() {
-        return Paths.get(scanOutputDirectoryPath)
+        return convertPath(scanOutputDirectoryPath)
     }
     public int getSearchDepth() {
         return convertInt(searchDepth)
@@ -812,10 +816,10 @@ class DetectConfiguration {
         return mavenScope
     }
     public Path getGradlePath() {
-        return Paths.get(gradlePath)
+        return convertPath(gradlePath)
     }
     public Path getMavenPath() {
-        return Paths.get(mavenPath)
+        return convertPath(mavenPath)
     }
     public String getMavenExcludedModuleNames() {
         return mavenExcludedModuleNames
@@ -827,19 +831,19 @@ class DetectConfiguration {
         return mavenBuildCommand
     }
     public Path getNugetPath() {
-        return Paths.get(nugetPath)
+        return convertPath(nugetPath)
     }
     public Path getNpmPath() {
-        return Paths.get(npmPath)
+        return convertPath(npmPath)
     }
     public boolean getNpmIncludeDevDependencies() {
         return BooleanUtils.toBoolean(npmIncludeDevDependencies)
     }
     public Path getNpmNodePath() {
-        return Paths.get(npmNodePath)
+        return convertPath(npmNodePath)
     }
     public Path getPearPath() {
-        return Paths.get(pearPath)
+        return convertPath(pearPath)
     }
     public boolean getPearOnlyRequiredDependencies() {
         return BooleanUtils.toBoolean(pearOnlyRequiredDependencies)
@@ -851,22 +855,22 @@ class DetectConfiguration {
         return BooleanUtils.toBoolean(pythonThreeOverride)
     }
     public Path getPythonPath() {
-        return Paths.get(pythonPath)
+        return convertPath(pythonPath)
     }
     public Path getRequirementsFilePath() {
-        return Paths.get(requirementsFilePath)
+        return convertPath(requirementsFilePath)
     }
     public Path getGoDepPath() {
-        return Paths.get(goDepPath)
+        return convertPath(goDepPath)
     }
     public boolean getGoRunDepInit() {
         return BooleanUtils.toBoolean(goRunDepInit)
     }
     public Path getDockerPath() {
-        return Paths.get(dockerPath)
+        return convertPath(dockerPath)
     }
     public Path getDockerInspectorPath() {
-        return Paths.get(dockerInspectorPath)
+        return convertPath(dockerInspectorPath)
     }
     public String getDockerInspectorVersion() {
         return dockerInspectorVersion
@@ -878,7 +882,7 @@ class DetectConfiguration {
         return dockerImage
     }
     public Path getBashPath() {
-        return Paths.get(bashPath)
+        return convertPath(bashPath)
     }
     public String getLoggingLevel() {
         return loggingLevel
@@ -905,7 +909,7 @@ class DetectConfiguration {
         return excludedScanPaths
     }
     public Path getHubSignatureScannerOfflineLocalPath() {
-        return Paths.get(hubSignatureScannerOfflineLocalPath)
+        return convertPath(hubSignatureScannerOfflineLocalPath)
     }
     public String getHubSignatureScannerHostUrl() {
         return hubSignatureScannerHostUrl
@@ -920,13 +924,13 @@ class DetectConfiguration {
         return BooleanUtils.toBoolean(hubSignatureScannerDisabled)
     }
     public Path getPerlPath() {
-        return Paths.get(perlPath?.trim())
+        return convertPath(perlPath)
     }
     public Path getCpanPath() {
-        return Paths.get(cpanPath?.trim())
+        return convertPath(cpanPath)
     }
     public Path getCpanmPath() {
-        return Paths.get(cpanmPath?.trim())
+        return convertPath(cpanmPath)
     }
     public String getSbtExcludedConfigurationNames() {
         return sbtExcludedConfigurationNames
@@ -947,7 +951,7 @@ class DetectConfiguration {
         return aggregateBomName?.trim()
     }
     public Path getCondaPath() {
-        return Paths.get(condaPath?.trim())
+        return convertPath(condaPath)
     }
     public String getCondaEnvironmentName() {
         return condaEnvironmentName?.trim()
@@ -956,13 +960,13 @@ class DetectConfiguration {
         return riskReportPdf
     }
     public Path getRiskReportPdfOutputDirectory() {
-        return Paths.get(riskReportPdfOutputDirectory)
+        return convertPath(riskReportPdfOutputDirectory)
     }
     public Boolean getNoticesReport() {
         return noticesReport
     }
     public Path getNoticesReportOutputDirectory() {
-        return Paths.get(noticesReportOutputDirectory)
+        return convertPath(noticesReportOutputDirectory)
     }
     public Path getDockerInspectorAirGapPath() {
         return getInspectorAirGapPath(dockerInspectorAirGapPath, DOCKER)
