@@ -25,14 +25,8 @@ package com.blackducksoftware.integration.hub.detect.codelocation;
 import java.nio.file.Paths;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.blackducksoftware.integration.hub.detect.util.DetectFileManager;
 
 public abstract class CodeLocationNameProvider {
-    @Autowired
-    protected DetectFileManager detectFileManager;
-
     public abstract String generateBomToolName(CodeLocationName codeLocationName);
 
     public abstract String generateScanName(CodeLocationName codeLocationName);

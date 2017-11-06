@@ -1,5 +1,7 @@
 package com.blackducksoftware.integration.hub.detect.bomtool.npm
 
+import java.nio.file.Paths
+
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -30,20 +32,20 @@ class NpmLockfilePackagerTest {
     @Test
     public void parseLockFileTest() {
         String lockFileText = testUtil.getResourceAsUTF8String('npm/package-lock.json')
-        DetectCodeLocation actual = npmLockfilePackager.parse("source", lockFileText)
+        DetectCodeLocation actual = npmLockfilePackager.parse(Paths.get('source'), lockFileText)
 
-        Assert.assertEquals(actual.bomToolProjectName, "knockout-tournament");
-        Assert.assertEquals(actual.bomToolProjectVersionName, "1.0.0");
-        DependencyGraphResourceTestUtil.assertGraph('/npm/packageLockExpected_graph.json', actual.dependencyGraph);
+        Assert.assertEquals(actual.bomToolProjectName, 'knockout-tournament')
+        Assert.assertEquals(actual.bomToolProjectVersionName, '1.0.0')
+        DependencyGraphResourceTestUtil.assertGraph('/npm/packageLockExpected_graph.json', actual.dependencyGraph)
     }
 
     @Test
     public void parseShrinkwrapTest() {
         String shrinkwrapText = testUtil.getResourceAsUTF8String('npm/npm-shrinkwrap.json')
-        DetectCodeLocation actual = npmLockfilePackager.parse("source", shrinkwrapText)
+        DetectCodeLocation actual = npmLockfilePackager.parse(Paths.get('source'), shrinkwrapText)
 
-        Assert.assertEquals(actual.bomToolProjectName, "fec-builder");
-        Assert.assertEquals(actual.bomToolProjectVersionName, "1.3.7");
-        DependencyGraphResourceTestUtil.assertGraph('/npm/shrinkwrapExpected_graph.json', actual.dependencyGraph);
+        Assert.assertEquals(actual.bomToolProjectName, 'fec-builder')
+        Assert.assertEquals(actual.bomToolProjectVersionName, '1.3.7')
+        DependencyGraphResourceTestUtil.assertGraph('/npm/shrinkwrapExpected_graph.json', actual.dependencyGraph)
     }
 }

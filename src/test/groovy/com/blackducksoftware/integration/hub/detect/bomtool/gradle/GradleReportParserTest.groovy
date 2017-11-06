@@ -23,7 +23,6 @@ import com.blackducksoftware.integration.hub.detect.model.DetectCodeLocation
 import com.blackducksoftware.integration.hub.detect.model.DetectProject
 import com.blackducksoftware.integration.hub.detect.testutils.TestUtil
 import com.blackducksoftware.integration.util.ResourceUtil
-import com.google.gson.GsonBuilder
 
 class GradleReportParserTest {
     private TestUtil testUtil = new TestUtil()
@@ -46,51 +45,51 @@ class GradleReportParserTest {
 
     @Test
     public void complexTest() {
-        DetectCodeLocation codeLocation = build('gradle/parse-tests/complex_dependencyGraph.txt');
-        DependencyGraph graph = codeLocation.dependencyGraph;
+        DetectCodeLocation codeLocation = build('gradle/parse-tests/complex_dependencyGraph.txt')
+        DependencyGraph graph = codeLocation.dependencyGraph
 
-        assertHasMavenGav(graph, "non-project:with-nested:1.0.0");
-        assertHasMavenGav(graph, "solo:component:4.12");
-        assertHasMavenGav(graph, "some.group:child:2.2.2");
-        assertHasMavenGav(graph, "terminal:child:6.2.3");
+        assertHasMavenGav(graph, "non-project:with-nested:1.0.0")
+        assertHasMavenGav(graph, "solo:component:4.12")
+        assertHasMavenGav(graph, "some.group:child:2.2.2")
+        assertHasMavenGav(graph, "terminal:child:6.2.3")
 
-        assertDoesNotHave(graph, "child-project");
-        assertDoesNotHave(graph, "nested-parent");
-        assertDoesNotHave(graph, "spring-webflux");
-        assertDoesNotHave(graph, "spring-beans");
-        assertDoesNotHave(graph, "spring-core");
-        assertDoesNotHave(graph, "spring-web");
-        assertDoesNotHave(graph, "should-suppress");
+        assertDoesNotHave(graph, "child-project")
+        assertDoesNotHave(graph, "nested-parent")
+        assertDoesNotHave(graph, "spring-webflux")
+        assertDoesNotHave(graph, "spring-beans")
+        assertDoesNotHave(graph, "spring-core")
+        assertDoesNotHave(graph, "spring-web")
+        assertDoesNotHave(graph, "should-suppress")
 
-        assertHasRootMavenGavs(graph, "solo:component:4.12", "non-project:with-nested:1.0.0", "some.group:parent:5.0.0", "terminal:child:6.2.3");
+        assertHasRootMavenGavs(graph, "solo:component:4.12", "non-project:with-nested:1.0.0", "some.group:parent:5.0.0", "terminal:child:6.2.3")
 
-        assertParentHasChildMavenGav("some.group:parent:5.0.0", graph, "some.group:child:2.2.2");
+        assertParentHasChildMavenGav("some.group:parent:5.0.0", graph, "some.group:child:2.2.2")
     }
 
     private DetectCodeLocation build(String resource){
-        InputStream inputStream = ResourceUtil.getResourceAsStream(GradleReportParserTest.class, resource)
+        InputStream inputStream = ResourceUtil.getResourceAsStream(resource)
         DetectProject project = new DetectProject()
         GradleReportParser gradleReportParser = new GradleReportParser()
         ReflectionTestUtils.setField(gradleReportParser, 'externalIdFactory', externalIdFactory)
         DetectCodeLocation codeLocation = gradleReportParser.parseDependencies(project, inputStream)
-        return codeLocation;
+        return codeLocation
     }
 
     @Test
     public void testSpringFrameworkAop() {
-        InputStream inputStream = ResourceUtil.getResourceAsStream(GradleReportParserTest.class, 'gradle/spring-framework/spring_aop_dependencyGraph.txt')
+        InputStream inputStream = ResourceUtil.getResourceAsStream('gradle/spring-framework/spring_aop_dependencyGraph.txt')
         DetectProject project = new DetectProject()
         GradleReportParser gradleReportParser = new GradleReportParser()
         ReflectionTestUtils.setField(gradleReportParser, 'externalIdFactory', new ExternalIdFactory())
         DetectCodeLocation codeLocation = gradleReportParser.parseDependencies(project, inputStream)
-        println(new GsonBuilder().setPrettyPrinting().create().toJson(codeLocation))
+        testUtil.printJsonObject(codeLocation)
     }
 
     private void createNewCodeLocationTest(String gradleInspectorOutputResourcePath, String expectedResourcePath, String rootProjectName, String rootProjectVersionName) {
         DetectProject project = new DetectProject()
         GradleReportParser gradleReportParser = new GradleReportParser()
         ReflectionTestUtils.setField(gradleReportParser, 'externalIdFactory', new ExternalIdFactory())
-        DetectCodeLocation codeLocation = gradleReportParser.parseDependencies(project, ResourceUtil.getResourceAsStream(GradleReportParserTest.class, gradleInspectorOutputResourcePath))
+        DetectCodeLocation codeLocation = gradleReportParser.parseDependencies(project, ResourceUtil.getResourceAsStream(gradleInspectorOutputResourcePath))
 
         assertEquals(rootProjectName, project.getProjectName())
         assertEquals(rootProjectVersionName, project.getProjectVersionName())

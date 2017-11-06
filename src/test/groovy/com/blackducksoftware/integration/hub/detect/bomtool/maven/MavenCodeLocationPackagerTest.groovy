@@ -2,6 +2,8 @@ package com.blackducksoftware.integration.hub.detect.bomtool.maven
 
 import static org.junit.Assert.*
 
+import java.nio.file.Paths
+
 import org.junit.Test
 
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory
@@ -48,7 +50,7 @@ class MavenCodeLocationPackagerTest {
     private void createNewCodeLocationTest(String mavenOutputText, String expectedResourcePath, int numberOfCodeLocations, String excludedModules, String includedModules) {
         def mavenCodeLocationPackager = new MavenCodeLocationPackager()
         mavenCodeLocationPackager.externalIdFactory = new ExternalIdFactory()
-        List<DetectCodeLocation> codeLocations = mavenCodeLocationPackager.extractCodeLocations('/test/path', mavenOutputText, excludedModules, includedModules)
+        List<DetectCodeLocation> codeLocations = mavenCodeLocationPackager.extractCodeLocations(Paths.get('/test/path'), mavenOutputText, excludedModules, includedModules)
         assertEquals(numberOfCodeLocations, codeLocations.size())
         DetectCodeLocation codeLocation = codeLocations[0]
 

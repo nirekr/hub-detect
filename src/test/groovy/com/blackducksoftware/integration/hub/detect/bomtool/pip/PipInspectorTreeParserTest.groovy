@@ -13,6 +13,8 @@ package com.blackducksoftware.integration.hub.detect.bomtool.pip
 
 import static org.junit.Assert.*
 
+import java.nio.file.Paths
+
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -85,7 +87,7 @@ ${space + child3Text}
 
         validText = validText.split("\r?\n").join(System.lineSeparator)
 
-        DetectCodeLocation root = parser.parse(validText, '')
+        DetectCodeLocation root = parser.parse(validText, Paths.get(''))
         ExternalId expectedExternalId = parser.externalIdFactory.createNameVersionExternalId(Forge.PYPI, 'name', 'version')
         Assert.assertEquals('name', root.getBomToolProjectName())
         Assert.assertEquals('version', root.getBomToolProjectVersionName())
@@ -100,7 +102,7 @@ ${space + child3Text}
         the result should be null
         """
         invalidText = invalidText.split("\r?\n").join(System.lineSeparator)
-        DetectCodeLocation root = parser.parse(invalidText, '')
+        DetectCodeLocation root = parser.parse(invalidText, Paths.get(''))
         Assert.assertNull(root)
     }
 }

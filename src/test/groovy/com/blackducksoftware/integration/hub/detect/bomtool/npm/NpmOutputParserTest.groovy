@@ -1,5 +1,7 @@
 package com.blackducksoftware.integration.hub.detect.bomtool.npm
 
+import java.nio.file.Paths
+
 import org.junit.Assert
 import org.junit.Test
 
@@ -16,10 +18,10 @@ public class NpmOutputParserTest {
         def parser = new NpmCliDependencyFinder()
         parser.externalIdFactory = new ExternalIdFactory()
         String testIn = testUtil.getResourceAsUTF8String('/npm/packman_proj_dependencies.json')
-        DetectCodeLocation codeLocation = parser.convertNpmJsonFileToCodeLocation("source", testIn)
+        DetectCodeLocation codeLocation = parser.convertNpmJsonFileToCodeLocation(Paths.get('source'), testIn)
 
-        Assert.assertEquals(codeLocation.bomToolProjectName, "node-js");
-        Assert.assertEquals(codeLocation.bomToolProjectVersionName, "0.2.0");
-        DependencyGraphResourceTestUtil.assertGraph('/npm/npmParseOutput_graph.json', codeLocation.dependencyGraph);
+        Assert.assertEquals(codeLocation.bomToolProjectName, 'node-js')
+        Assert.assertEquals(codeLocation.bomToolProjectVersionName, '0.2.0')
+        DependencyGraphResourceTestUtil.assertGraph('/npm/npmParseOutput_graph.json', codeLocation.dependencyGraph)
     }
 }

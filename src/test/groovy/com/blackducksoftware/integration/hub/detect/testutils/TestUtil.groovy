@@ -11,18 +11,40 @@
  */
 package com.blackducksoftware.integration.hub.detect.testutils
 
+import java.lang.reflect.Type
 import java.nio.charset.StandardCharsets
+import java.nio.file.Path
 
 import org.skyscreamer.jsonassert.JSONAssert
 
 import com.blackducksoftware.integration.util.ResourceUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 
 class TestUtil {
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create()
+    private final JsonSerializer<Path> serializer = new JsonSerializer<Path>() {
+        @Override
+        public JsonElement serialize(Path src, Type typeOfSrc, JsonSerializationContext context) {
+            String pathString = src.toFile().getCanonicalPath()
+            JsonPrimitive jsonPath = new JsonPrimitive(pathString)
+
+            return jsonPath
+        }
+    }
+
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Path, serializer).create()
+
+    void printJsonObject(Object object) {
+        final String jsonifiedObject = gson.toJson(object)
+        println jsonifiedObject
+    }
 
     void testJsonResource(String expectedResourcePath, Object object) {
+        JsonSerializer<Path> serializer
         final String expected = getResourceAsUTF8String(expectedResourcePath)
         final String actual = gson.toJson(object)
         println actual

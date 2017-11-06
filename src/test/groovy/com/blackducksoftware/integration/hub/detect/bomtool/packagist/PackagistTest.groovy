@@ -1,5 +1,7 @@
 package com.blackducksoftware.integration.hub.detect.bomtool.packagist
 
+import java.nio.file.Paths
+
 import org.junit.Assert
 import org.junit.Test
 
@@ -23,11 +25,11 @@ class PackagistTest {
 
         final String composerLockText = testUtil.getResourceAsUTF8String('/packagist/composer.lock')
         final String composerJsonText = testUtil.getResourceAsUTF8String('/packagist/composer.json')
-        DetectCodeLocation codeLocation = packagistParser.getDependencyGraphFromProject("source", composerJsonText, composerLockText)
+        DetectCodeLocation codeLocation = packagistParser.getDependencyGraphFromProject(Paths.get('source'), composerJsonText, composerLockText)
 
-        Assert.assertEquals(codeLocation.bomToolProjectName, "clue/graph-composer");
-        Assert.assertEquals(codeLocation.bomToolProjectVersionName, "1.0.0");
+        Assert.assertEquals(codeLocation.bomToolProjectName, "clue/graph-composer")
+        Assert.assertEquals(codeLocation.bomToolProjectVersionName, "1.0.0")
 
-        DependencyGraphResourceTestUtil.assertGraph('/packagist/PackagistTestDependencyNode_graph.json', codeLocation.dependencyGraph);
+        DependencyGraphResourceTestUtil.assertGraph('/packagist/PackagistTestDependencyNode_graph.json', codeLocation.dependencyGraph)
     }
 }
