@@ -89,8 +89,14 @@ public class ExecutableManager {
     }
 
     private File findExecutableFileFromSystemPath(final String executable) {
-        final Path systemPath = Paths.get(System.getenv("PATH"));
-        return findExecutableFileFromPath(systemPath, executable);
+        final String systemPath = System.getenv("PATH");
+        for (final String envPath : systemPath.split(File.pathSeparator)) {
+            final File executableFile = findExecutableFileFromPath(Paths.get(envPath), executable);
+            if (executableFile != null) {
+                return executableFile;
+            }
+        }
+        return null;
     }
 
     private File findExecutableFileFromPath(final Path path, final String executableName) {
