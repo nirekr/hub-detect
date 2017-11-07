@@ -60,8 +60,8 @@ class NugetInspectorManager {
                     'list',
                     detectConfiguration.getNugetInspectorPackageName()
                 ]
-                def airGapNugetInspectorDirectory = detectConfiguration.getNugetInspectorAirGapPath().toFile()
-                if (airGapNugetInspectorDirectory.exists()) {
+                def airGapNugetInspectorDirectory = detectConfiguration.getNugetInspectorAirGapPath()?.toFile()
+                if (airGapNugetInspectorDirectory != null && airGapNugetInspectorDirectory.exists()) {
                     logger.debug('Running in airgap mode. Resolving version from local path')
                     nugetOptions.addAll([
                         '-Source',
@@ -93,8 +93,8 @@ class NugetInspectorManager {
     private void installInspector(final Path nugetExecutablePath, final File outputDirectory) {
         File toolsDirectory
 
-        def airGapNugetInspectorDirectory = detectConfiguration.getNugetInspectorAirGapPath().toFile()
-        if (airGapNugetInspectorDirectory.exists()) {
+        def airGapNugetInspectorDirectory = detectConfiguration.getNugetInspectorAirGapPath()?.toFile()
+        if (airGapNugetInspectorDirectory != null && airGapNugetInspectorDirectory.exists()) {
             logger.debug('Running in airgap mode. Resolving from local path')
             toolsDirectory = new File(airGapNugetInspectorDirectory, 'tools')
         } else {
