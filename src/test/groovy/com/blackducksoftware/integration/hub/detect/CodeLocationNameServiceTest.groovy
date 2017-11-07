@@ -13,6 +13,9 @@ package com.blackducksoftware.integration.hub.detect
 
 import static org.junit.Assert.*
 
+import java.nio.file.Path
+import java.nio.file.Paths
+
 import org.junit.Test
 
 import com.blackducksoftware.integration.hub.detect.codelocation.CodeLocationName
@@ -31,7 +34,7 @@ class CodeLocationNameServiceTest {
         String expected = 'hub-common-rest/target/hub-common-rest/2.5.1-SNAPSHOT Hub Detect Scan'
 
         CodeLocationNameProvider codeLocationNameProvider = new CodeLocationNameProvider1()
-        String sourcePath = '/Users/ekerwin/Documents/source/integration/hub-common-rest'
+        Path sourcePath = Paths.get('/Users/ekerwin/Documents/source/integration/hub-common-rest')
         String scanTargetPath = '/Users/ekerwin/Documents/source/integration/hub-common-rest/target'
         String projectName = 'hub-common-rest'
         String projectVersionName = '2.5.1-SNAPSHOT'
@@ -49,7 +52,7 @@ class CodeLocationNameServiceTest {
 
         CodeLocationNameProvider codeLocationNameProvider = new CodeLocationNameProvider2()
 
-        String sourcePath = '/Users/ekerwin/Documents/source/integration/hub-common-rest'
+        Path sourcePath = Paths.get('/Users/ekerwin/Documents/source/integration/hub-common-rest')
         String scanTargetPath = '/Users/ekerwin/Documents/source/integration/hub-common-rest/target'
         String projectName = 'hub-common-rest'
         String projectVersionName = '2.5.1-SNAPSHOT'
@@ -67,7 +70,7 @@ class CodeLocationNameServiceTest {
 
         CodeLocationNameProvider codeLocationNameProvider = new CodeLocationNameProvider3()
 
-        String sourcePath = '/Users/ekerwin/Documents/source/integration/hub-common-rest'
+        Path sourcePath = Paths.get('/Users/ekerwin/Documents/source/integration/hub-common-rest')
         String scanTargetPath = '/Users/ekerwin/Documents/source/integration/hub-common-rest/target'
         String projectName = 'hub-common-rest'
         String projectVersionName = '2.5.1-SNAPSHOT'
@@ -85,7 +88,7 @@ class CodeLocationNameServiceTest {
 
         CodeLocationNameProvider codeLocationNameProvider = new CodeLocationNameProvider1()
 
-        String sourcePath = '/Users/ekerwin/Documents/source/integration/hub-common-rest'
+        Path sourcePath = Paths.get('/Users/ekerwin/Documents/source/integration/hub-common-rest')
         String projectName = 'hub-common-rest'
         String projectVersionName = '2.5.1-SNAPSHOT'
         String prefix = ''
@@ -102,7 +105,7 @@ class CodeLocationNameServiceTest {
 
         CodeLocationNameProvider codeLocationNameProvider = new CodeLocationNameProvider2()
 
-        String sourcePath = '/Users/ekerwin/Documents/source/integration/hub-common-rest'
+        Path sourcePath = Paths.get('/Users/ekerwin/Documents/source/integration/hub-common-rest')
         String projectName = 'hub-common-rest'
         String projectVersionName = '2.5.1-SNAPSHOT'
         String prefix = ''
@@ -119,7 +122,7 @@ class CodeLocationNameServiceTest {
 
         CodeLocationNameProvider codeLocationNameProvider = new CodeLocationNameProvider3()
 
-        String sourcePath = '/Users/ekerwin/Documents/source/integration/hub-common-rest'
+        Path sourcePath = Paths.get('/Users/ekerwin/Documents/source/integration/hub-common-rest')
         String projectName = 'hub-common-rest'
         String projectVersionName = '2.5.1-SNAPSHOT'
         String prefix = ''
@@ -136,7 +139,7 @@ class CodeLocationNameServiceTest {
 
         CodeLocationNameProvider codeLocationNameProvider = new CodeLocationNameProvider3()
 
-        String sourcePath = '/Users/ekerwin/Documents/source/integration/hub-common-rest'
+        Path sourcePath = Paths.get('/Users/ekerwin/Documents/source/integration/hub-common-rest')
         String projectName = 'hub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-resthub-common-rest'
         String projectVersionName = '2.5.1-SNAPSHOT'
         String prefix = ''

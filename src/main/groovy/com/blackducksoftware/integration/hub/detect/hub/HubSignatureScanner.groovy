@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.hub
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -201,7 +203,7 @@ class HubSignatureScanner {
 
         String projectName = detectProject.projectName
         String projectVersionName = detectProject.projectVersionName
-        String sourcePath = detectConfiguration.sourcePath
+        Path sourcePath = detectConfiguration.sourcePath
         String prefix = detectConfiguration.projectCodeLocationPrefix
         String suffix = detectConfiguration.projectCodeLocationSuffix
         CodeLocationName codeLocationName = codeLocationNameService.createScanName(sourcePath, canonicalPath, projectName, projectVersionName, prefix, suffix)
