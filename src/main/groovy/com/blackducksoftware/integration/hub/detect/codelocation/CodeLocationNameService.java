@@ -22,6 +22,7 @@
  */
 package com.blackducksoftware.integration.hub.detect.codelocation;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,12 +49,12 @@ public class CodeLocationNameService {
     @Autowired
     private CodeLocationNameProvider3 codeLocationNameProvider3;
 
-    public CodeLocationName createBomToolName(final String sourcePath, final String projectName, final String projectVersionName, final BomToolType bomToolType, final String prefix, final String suffix) {
+    public CodeLocationName createBomToolName(final Path sourcePath, final String projectName, final String projectVersionName, final BomToolType bomToolType, final String prefix, final String suffix) {
         final CodeLocationName codeLocationName = new CodeLocationName(projectName, projectVersionName, bomToolType, sourcePath, null, prefix, suffix, CodeLocationType.BOM);
         return codeLocationName;
     }
 
-    public CodeLocationName createScanName(final String sourcePath, final String scanTargetPath, final String projectName, final String projectVersionName, final String prefix, final String suffix) {
+    public CodeLocationName createScanName(final Path sourcePath, final String scanTargetPath, final String projectName, final String projectVersionName, final String prefix, final String suffix) {
         final CodeLocationName codeLocationName = new CodeLocationName(projectName, projectVersionName, null, sourcePath, scanTargetPath, prefix, suffix, CodeLocationType.SCAN);
         return codeLocationName;
     }

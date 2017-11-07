@@ -22,6 +22,8 @@
  */
 package com.blackducksoftware.integration.hub.detect.bomtool
 
+import java.nio.file.Path
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +47,7 @@ class PearBomTool extends BomTool {
 
     static final String PACKAGE_XML_FILENAME = 'package.xml'
 
-    private String pearExePath
+    private Path pearExePath
 
     @Autowired
     PearDependencyFinder pearDependencyFinder

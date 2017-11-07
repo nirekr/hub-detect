@@ -22,19 +22,21 @@
  */
 package com.blackducksoftware.integration.hub.detect.codelocation;
 
+import java.nio.file.Path;
+
 import com.blackducksoftware.integration.hub.detect.model.BomToolType;
 
 public class CodeLocationName {
     private final String projectName;
     private final String projectVersionName;
     private final BomToolType bomToolType;
-    private final String sourcePath;
+    private final Path sourcePath;
     private final String scanTargetPath;
     private final String prefix;
     private final String suffix;
     private final CodeLocationType codeLocationType;
 
-    public CodeLocationName(final String projectName, final String projectVersionName, final BomToolType bomToolType, final String sourcePath, final String scanTargetPath, final String prefix, final String suffix,
+    public CodeLocationName(final String projectName, final String projectVersionName, final BomToolType bomToolType, final Path sourcePath, final String scanTargetPath, final String prefix, final String suffix,
             final CodeLocationType codeLocationType) {
         this.projectName = projectName;
         this.projectVersionName = projectVersionName;
@@ -58,7 +60,7 @@ public class CodeLocationName {
         return bomToolType;
     }
 
-    public String getSourcePath() {
+    public Path getSourcePath() {
         return sourcePath;
     }
 

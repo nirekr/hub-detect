@@ -154,7 +154,7 @@ class DetectProjectManager {
                 String projectVersionName = detectProject.getProjectVersionName()
                 String prefix = detectConfiguration.getProjectCodeLocationPrefix()
                 String suffix = detectConfiguration.getProjectCodeLocationSuffix()
-                CodeLocationName codeLocationName = codeLocationNameService.createBomToolName(it.sourcePath.toRealPath().toString(), projectName, projectVersionName, it.bomToolType, prefix, suffix)
+                CodeLocationName codeLocationName = codeLocationNameService.createBomToolName(it.sourcePath, projectName, projectVersionName, it.bomToolType, prefix, suffix)
                 String codeLocationNameString = codeLocationNameService.generateBomToolCurrent(codeLocationName)
                 final SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(codeLocationNameString, detectProject, it)
                 String projectPath = it.getSourcePath().getFileName().toString()
