@@ -101,13 +101,13 @@ class NpmBomTool extends BomTool {
                 logger.warn("Could not find an ${executableManager.getExecutableName(ExecutableType.NPM)} executable")
             } else {
                 npmLsExe = new Executable(sourcePath.toFile(), npmExePath, ['-version'])
-                String npmNodePath = detectConfiguration.getNpmNodePath()
-                if (!npmNodePath.isEmpty()) {
-                    int lastSlashIndex = npmNodePath.lastIndexOf('/')
-                    if (lastSlashIndex >= 0) {
-                        npmNodePath = npmNodePath.substring(0, lastSlashIndex)
+                Path npmNodePath = detectConfiguration.getNpmNodePath()
+                if (npmNodePath != null) {
+                    String npmNodeStringPath = npmNodePath.toFile().getCanonicalPath()
+                    if (!npmNodePath.toFile().isDirectory()) {
+                        npmNodeStringPath = npmNodePath.toFile().getParentFile().getCanonicalPath()
                     }
-                    npmLsExe.environmentVariables.put('PATH', npmNodePath)
+                    npmLsExe.environmentVariables.put('PATH', npmNodeStringPath)
                 }
                 logger.debug("Npm version ${executableRunner.execute(npmLsExe).standardOutput}")
             }
